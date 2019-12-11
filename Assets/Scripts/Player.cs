@@ -9,8 +9,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
-	private FloatVariable shootingSpeed;
+	[Header("Settings")]
+	[SerializeField] private FloatVariable shootingSpeed;
+	[SerializeField] private FloatVariable aimTrailLength;
+
+	[Header("Prefab References")]
+	[SerializeField] private GameObject bubbleBulletPrefab;
+	[SerializeField] private GameObject aimTrailPrefab;
 
 	// Start is called before the first frame update
 	void Start()

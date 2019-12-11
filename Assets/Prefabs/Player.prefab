@@ -44,3 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootingSpeed: {fileID: 11400000, guid: 7f85222f544b0ac499151e2eb8b6e824, type: 2}
+  aimTrailLength: {fileID: 11400000, guid: ddf166ce99ee3a6499bae1817e9a3e76, type: 2}
+  bubbleBulletPrefab: {fileID: 4726725535379041231, guid: 88b2144d8344056438fa80eeae1495a4,
+    type: 3}
+  aimTrailPrefab: {fileID: 5251535563366165341, guid: 4f1486b9c5faa544e97fa9f560e16ca1,
+    type: 3}
