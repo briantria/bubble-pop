@@ -13,16 +13,20 @@ public class Player : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-
 	[Header("Settings")]
 	[SerializeField] private FloatVariable shootingSpeed;
-	[SerializeField] private FloatVariable aimTrailLength;
+
+	[Header("Game Events")]
+	[SerializeField] private GameEvent onBubbleShoot;
+	[SerializeField] private GameEvent onCancelBubbleShoot;
 
 	[Header("Prefab References")]
 	[SerializeField] private GameObject bubbleBulletPrefab;
-	[SerializeField] private GameObject aimTrailPrefab;
-
+	[SerializeField] private GameObject aimManagerPrefab;
 #pragma warning restore 0649
+
+	private GameObject bubbleBullet;
+	private GameObject aimManager;
 	#endregion
 
 	#region LifeCycle
@@ -33,7 +37,10 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		Instantiate(bubbleBulletPrefab, transform.position, Quaternion.identity);
+		bubbleBullet = Instantiate(bubbleBulletPrefab, transform.position, Quaternion.identity);
+		aimManager = Instantiate(aimManagerPrefab, transform.position, Quaternion.identity);
+
+		aimManager.SetActive(false);
 	}
 
 	// Update is called once per frame
@@ -46,17 +53,11 @@ public class Player : MonoBehaviour
 	}
 	#endregion
 
-	private bool HasMissingReference()
+	bool HasMissingReference()
 	{
 		if (shootingSpeed == null)
 		{
 			Debug.LogError("Missing reference to shooting speed.");
-			return true;
-		}
-
-		if (aimTrailLength == null)
-		{
-			Debug.LogError("Missing reference to aim trail length.");
 			return true;
 		}
 
@@ -66,12 +67,32 @@ public class Player : MonoBehaviour
 			return true;
 		}
 
-		if (aimTrailPrefab == null)
+		if (aimManagerPrefab == null)
 		{
 			Debug.LogError("Missing reference to aim trail prefab.");
 			return true;
 		}
 
 		return false;
+	}
+
+	public void StartAim()
+	{
+
+	}
+
+	public void AttemptBubbleShoot()
+	{
+
+	}
+
+	public void BubbleShoot()
+	{
+
+	}
+
+	public void CancelBubbleShoot()
+	{
+
 	}
 }

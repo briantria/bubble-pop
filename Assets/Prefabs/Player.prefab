@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6806743938362258901}
   - component: {fileID: 6806743938362258907}
+  - component: {fileID: 114201227427030784}
+  - component: {fileID: 114620517871844018}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -44,8 +46,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootingSpeed: {fileID: 11400000, guid: 7f85222f544b0ac499151e2eb8b6e824, type: 2}
-  aimTrailLength: {fileID: 11400000, guid: ddf166ce99ee3a6499bae1817e9a3e76, type: 2}
+  onBubbleShoot: {fileID: 11400000, guid: 4ee2f4ae98ee6ce4ba1475f1df681b80, type: 2}
+  onCancelBubbleShoot: {fileID: 11400000, guid: 3f0b895b470da3047b4396d08d480453,
+    type: 2}
   bubbleBulletPrefab: {fileID: 4726725535379041231, guid: 88b2144d8344056438fa80eeae1495a4,
     type: 3}
-  aimTrailPrefab: {fileID: 5251535563366165341, guid: 4f1486b9c5faa544e97fa9f560e16ca1,
+  aimManagerPrefab: {fileID: 5251535563366165341, guid: 4f1486b9c5faa544e97fa9f560e16ca1,
     type: 3}
+--- !u!114 &114201227427030784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6806743938362258904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f67414cda5a75245b5ab42a9a3f965d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStartAim: {fileID: 11400000, guid: 32219c4bb53c6c545866ad9e205a60ad, type: 2}
+  onUpdateAimDirection: {fileID: 11400000, guid: f5a7d8ad329ed7b4cbda40fb17a820df,
+    type: 2}
+  onAttemptBubbleShoot: {fileID: 11400000, guid: 4314098ef4a313e4d90af16f2ddb20d7,
+    type: 2}
+--- !u!114 &114620517871844018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6806743938362258904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 32219c4bb53c6c545866ad9e205a60ad, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6806743938362258904}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
