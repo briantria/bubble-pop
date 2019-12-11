@@ -20,12 +20,37 @@ public class Player : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+		if (HasMissingReference())
+		{
+			return;
+		}
 
+		Instantiate(bubbleBulletPrefab, transform.position, Quaternion.identity);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		if (HasMissingReference())
+		{
+			return;
+		}
+	}
 
+	private bool HasMissingReference()
+	{
+		if (bubbleBulletPrefab == null)
+		{
+			Debug.LogError("Missing reference to bubble bullet prefab.");
+			return true;
+		}
+
+		if (aimTrailPrefab == null)
+		{
+			Debug.LogError("Missing reference to aim trail prefab.");
+			return true;
+		}
+
+		return false;
 	}
 }
