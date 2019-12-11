@@ -10,7 +10,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 	#region Member Variables
-
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
@@ -24,7 +23,6 @@ public class Player : MonoBehaviour
 	[SerializeField] private GameObject aimTrailPrefab;
 
 #pragma warning restore 0649
-
 	#endregion
 
 	#region LifeCycle
@@ -50,6 +48,18 @@ public class Player : MonoBehaviour
 
 	private bool HasMissingReference()
 	{
+		if (shootingSpeed == null)
+		{
+			Debug.LogError("Missing reference to shooting speed.");
+			return true;
+		}
+
+		if (aimTrailLength == null)
+		{
+			Debug.LogError("Missing reference to aim trail length.");
+			return true;
+		}
+
 		if (bubbleBulletPrefab == null)
 		{
 			Debug.LogError("Missing reference to bubble bullet prefab.");
