@@ -78,12 +78,12 @@ public class Player : MonoBehaviour
 
 	public void StartAim()
 	{
-
+		aimManager.SetActive(true);
 	}
 
 	public void AttemptBubbleShoot()
 	{
-
+		aimManager.SetActive(false);
 	}
 
 	public void BubbleShoot()
