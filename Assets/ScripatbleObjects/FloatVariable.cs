@@ -4,14 +4,13 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Data/Float Variable")]
+[CreateAssetMenu(fileName = "NewFloatVariable", menuName = "ScriptableObject/Data/Float Variable", order = 51)]
 public class FloatVariable : ScriptableObject
 {
 	#region Properties
 	public float InitValue;
 
-	[NonSerialized]
-	public float RuntimeValue;
+	[NonSerialized] public float RuntimeValue;
 	#endregion
 
 	public void OnAfterDeserialize()
