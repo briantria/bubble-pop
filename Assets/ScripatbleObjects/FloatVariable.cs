@@ -13,13 +13,8 @@ public class FloatVariable : ScriptableObject
 	[NonSerialized] public float RuntimeValue;
 	#endregion
 
-	public void OnAfterDeserialize()
+	public void Awake()
 	{
 		RuntimeValue = InitValue;
-	}
-
-	public void OnBeforSerialize()
-	{
-
 	}
 }

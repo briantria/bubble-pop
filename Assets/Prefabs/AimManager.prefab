@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimTrailLength: {fileID: 11400000, guid: ddf166ce99ee3a6499bae1817e9a3e76, type: 2}
+  aimTrailSpacing: {fileID: 11400000, guid: 8fd57a73d6ccc444da900ff95dbbd4da, type: 2}
+  targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   particleTransform: {fileID: 6259286240326446149}
 --- !u!114 &114651268492698126
 MonoBehaviour:
@@ -63,12 +65,12 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5251535563366165341}
-        m_MethodName: 
+      - m_Target: {fileID: 3605369155740146786}
+        m_MethodName: UpdateAimDirection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

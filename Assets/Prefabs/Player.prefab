@@ -66,6 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f67414cda5a75245b5ab42a9a3f965d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   onStartAim: {fileID: 11400000, guid: 32219c4bb53c6c545866ad9e205a60ad, type: 2}
   onUpdateAimDirection: {fileID: 11400000, guid: f5a7d8ad329ed7b4cbda40fb17a820df,
     type: 2}

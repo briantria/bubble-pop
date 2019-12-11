@@ -13,6 +13,10 @@ public class Controls : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
+	// [Header("Settings")]
+	[SerializeField] private VectorVariable targetPoint;
+
+	[Header("Game Events")]
 	[SerializeField] private GameEvent onStartAim;
 	[SerializeField] private GameEvent onUpdateAimDirection;
 	[SerializeField] private GameEvent onAttemptBubbleShoot;
@@ -31,6 +35,12 @@ public class Controls : MonoBehaviour
 
 		if (Input.GetMouseButton(0))
 		{
+			if (targetPoint != null)
+			{
+				targetPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				//Debug.Log("target pos: " + targetPoint.RuntimeValue);
+			}
+
 			if (onUpdateAimDirection != null)
 			{
 				onUpdateAimDirection.Raise();

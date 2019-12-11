@@ -16,17 +16,20 @@ public class AimManager : MonoBehaviour
 
 	[Header("Settings")]
 	[SerializeField] private FloatVariable aimTrailLength;
+	[SerializeField] private FloatVariable aimTrailSpacing;
+	[SerializeField] private VectorVariable targetPoint;
 
 	[Header("References")]
 	[SerializeField] private Transform particleTransform;
-
 #pragma warning restore 0649
+
+	// private Transform trailParticle;
 	#endregion
 
 	#region LifeCycle
 	void Start()
 	{
-
+		// TODO: initiate target particle object pool
 	}
 	#endregion
 
@@ -35,6 +38,18 @@ public class AimManager : MonoBehaviour
 		if (aimTrailLength == null)
 		{
 			Debug.LogError("Missing reference to aim trail length.");
+			return true;
+		}
+
+		if (aimTrailSpacing == null)
+		{
+			Debug.LogError("Missing reference to aim trail spacing.");
+			return true;
+		}
+
+		if (targetPoint == null)
+		{
+			Debug.LogError("Missing reference to target point.");
 			return true;
 		}
 
@@ -49,6 +64,25 @@ public class AimManager : MonoBehaviour
 
 	public void UpdateAimDirection()
 	{
+		if (HasMissingReference())
+		{
+			return;
+		}
 
+		// TODO: handle multiple trail particles
+		Vector3 position = transform.position;
+		position.z = 0;
+
+		Vector3 targetPosition = targetPoint.RuntimeValue;
+		targetPosition.z = 0;
+
+		Vector3 aimDirection = (targetPosition - position).normalized;
+		// Debug.Log("target direction: " + aimDirection);
+
+		aimDirection = aimDirection * aimTrailSpacing.InitValue;
+		// Debug.Log("spacing: " + aimTrailSpacing.InitValue);
+		// Debug.Log("adjusted target direction: " + aimDirection);
+
+		particleTransform.localPosition = aimDirection;
 	}
 }
