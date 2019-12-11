@@ -9,6 +9,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+	#region Member Variables
+
+	// known issue for SerializedField throwing warnings
+	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
+#pragma warning disable 0649
+
 	[Header("Settings")]
 	[SerializeField] private FloatVariable shootingSpeed;
 	[SerializeField] private FloatVariable aimTrailLength;
@@ -17,7 +23,11 @@ public class Player : MonoBehaviour
 	[SerializeField] private GameObject bubbleBulletPrefab;
 	[SerializeField] private GameObject aimTrailPrefab;
 
-	// Start is called before the first frame update
+#pragma warning restore 0649
+
+	#endregion
+
+	#region LifeCycle
 	void Start()
 	{
 		if (HasMissingReference())
@@ -36,6 +46,7 @@ public class Player : MonoBehaviour
 			return;
 		}
 	}
+	#endregion
 
 	private bool HasMissingReference()
 	{
