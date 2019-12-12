@@ -13,7 +13,6 @@ public class AimManager : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-
 	[Header("Settings")]
 	[SerializeField] private FloatVariable aimTrailLength;
 	[SerializeField] private FloatVariable aimTrailSpacing;
@@ -23,16 +22,27 @@ public class AimManager : MonoBehaviour
 	[SerializeField] private Transform particleTransform;
 #pragma warning restore 0649
 
-	// private Transform trailParticle;
+	private List<Transform> trailParticleList = new List<Transform>();
 	#endregion
 
 	#region LifeCycle
 	void Start()
 	{
-		// TODO: initiate target particle object pool
+		if (HasMissingReference())
+		{
+			return;
+		}
+
+		trailParticleList.Add(particleTransform);
+		for (int idx = 1; idx < aimTrailLength.InitValue; ++idx)
+		{
+			Transform particle = Instantiate(particleTransform, transform.position, Quaternion.identity, transform);
+			trailParticleList.Add(particle);
+		}
 	}
 	#endregion
 
+	#region Private Methods
 	bool HasMissingReference()
 	{
 		if (aimTrailLength == null)
@@ -62,6 +72,15 @@ public class AimManager : MonoBehaviour
 		return false;
 	}
 
+	void showTrailParticles(bool isActive)
+	{
+		for (int idx = 0; idx < trailParticleList.Count; ++idx)
+		{
+			trailParticleList[idx].gameObject.SetActive(isActive);
+		}
+	}
+	#endregion
+
 	public void UpdateAimDirection()
 	{
 		if (HasMissingReference())
@@ -69,13 +88,20 @@ public class AimManager : MonoBehaviour
 			return;
 		}
 
-		// TODO: handle multiple trail particles
-		Vector3 position = transform.position;
-		position.z = 0;
-
 		Vector3 targetPosition = targetPoint.RuntimeValue;
-		targetPosition.z = 0;
+		Vector3 position = transform.position;
 
+		if (targetPosition.y <= position.y)
+		{
+			showTrailParticles(false);
+			return;
+		}
+
+		showTrailParticles(true);
+
+		// TODO: handle multiple trail particles
+		targetPosition.z = 0;
+		position.z = 0;
 		Vector3 aimDirection = (targetPosition - position).normalized;
 		// Debug.Log("target direction: " + aimDirection);
 
