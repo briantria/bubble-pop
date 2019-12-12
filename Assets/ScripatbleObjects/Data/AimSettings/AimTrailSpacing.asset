@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5e22e290147a74e98985ab1150299f, type: 3}
   m_Name: AimTrailSpacing
   m_EditorClassIdentifier: 
-  InitValue: 0.5
+  InitValue: 0.6

@@ -111,6 +111,7 @@ public class AimManager : MonoBehaviour
 
 		Vector3 targetPosition = targetPoint.RuntimeValue;
 		Vector3 position = transform.position;
+		Vector3 aimDirection = Vector3.zero;
 
 		if (targetPosition.y <= position.y)
 		{
@@ -118,18 +119,18 @@ public class AimManager : MonoBehaviour
 			return;
 		}
 
-		ShowTrailParticles(true);
 
-		// TODO: handle multiple trail particles
 		targetPosition.z = 0;
 		position.z = 0;
-		Vector3 aimDirection = (targetPosition - position).normalized;
-		// Debug.Log("target direction: " + aimDirection);
-
+		aimDirection = (targetPosition - position).normalized;
 		aimDirection = aimDirection * aimTrailSpacing.InitValue;
-		// Debug.Log("spacing: " + aimTrailSpacing.InitValue);
-		// Debug.Log("adjusted target direction: " + aimDirection);
 
-		particleTransform.localPosition = aimDirection;
+		ShowTrailParticles(true);
+		for (int idx = 0; idx < trailParticleList.Count; ++idx)
+		{
+			trailParticleList[idx].localPosition = aimDirection * aimTrailSpacing.InitValue * idx;
+		}
+
+		// particleTransform.localPosition = aimDirection;
 	}
 }
