@@ -48,6 +48,10 @@ MonoBehaviour:
   aimTrailLength: {fileID: 11400000, guid: ddf166ce99ee3a6499bae1817e9a3e76, type: 2}
   aimTrailSpacing: {fileID: 11400000, guid: 8fd57a73d6ccc444da900ff95dbbd4da, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
+  bottomLeftPerimeterPoint: {fileID: 11400000, guid: 6bd88d85150e7884a95b0e7cdc191ef9,
+    type: 2}
+  topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,
+    type: 2}
   particleTransform: {fileID: 6259286240326446149}
 --- !u!114 &114651268492698126
 MonoBehaviour:

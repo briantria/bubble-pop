@@ -18,6 +18,10 @@ public class AimManager : MonoBehaviour
 	[SerializeField] private FloatVariable aimTrailSpacing;
 	[SerializeField] private VectorVariable targetPoint;
 
+	[Header("Game Perimeter")]
+	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
+	[SerializeField] private VectorVariable topRightPerimeterPoint;
+
 	[Header("References")]
 	[SerializeField] private Transform particleTransform;
 #pragma warning restore 0649
@@ -33,12 +37,7 @@ public class AimManager : MonoBehaviour
 			return;
 		}
 
-		trailParticleList.Add(particleTransform);
-		for (int idx = 1; idx < aimTrailLength.InitValue; ++idx)
-		{
-			Transform particle = Instantiate(particleTransform, transform.position, Quaternion.identity, transform);
-			trailParticleList.Add(particle);
-		}
+		InstantiateParticlePool();
 	}
 	#endregion
 
@@ -69,10 +68,32 @@ public class AimManager : MonoBehaviour
 			return true;
 		}
 
+		if (bottomLeftPerimeterPoint == null)
+		{
+			Debug.LogError("Missing reference to bottom left perimeter point.");
+			return true;
+		}
+
+		if (topRightPerimeterPoint == null)
+		{
+			Debug.LogError("Missing reference to top right perimeter point.");
+			return true;
+		}
+
 		return false;
 	}
 
-	void showTrailParticles(bool isActive)
+	void InstantiateParticlePool()
+	{
+		trailParticleList.Add(particleTransform);
+		for (int idx = 1; idx < aimTrailLength.InitValue; ++idx)
+		{
+			Transform particle = Instantiate(particleTransform, transform.position, Quaternion.identity, transform);
+			trailParticleList.Add(particle);
+		}
+	}
+
+	void ShowTrailParticles(bool isActive)
 	{
 		for (int idx = 0; idx < trailParticleList.Count; ++idx)
 		{
@@ -93,11 +114,11 @@ public class AimManager : MonoBehaviour
 
 		if (targetPosition.y <= position.y)
 		{
-			showTrailParticles(false);
+			ShowTrailParticles(false);
 			return;
 		}
 
-		showTrailParticles(true);
+		ShowTrailParticles(true);
 
 		// TODO: handle multiple trail particles
 		targetPosition.z = 0;
