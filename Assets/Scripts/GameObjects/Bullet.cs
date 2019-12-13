@@ -40,15 +40,16 @@ public class Bullet : MonoBehaviour
 			return;
 		}
 
-		if (GetComponent<SpriteRenderer>() == null)
+		SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+		if (spriteRenderer == null)
 		{
 			Debug.LogError("Missing sprite renderer component.");
 			return;
 		}
 
 		initialPosition = transform.position;
-		Debug.Log("init pos: " + initialPosition);
-		dimensions = GetComponent<SpriteRenderer>().sprite.bounds.size;
+		dimensions = spriteRenderer.sprite.bounds.size;
 	}
 
 	void Update()

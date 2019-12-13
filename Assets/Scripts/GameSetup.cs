@@ -9,13 +9,20 @@ using UnityEngine;
 
 public class GameSetup : MonoBehaviour
 {
+	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-	[Header("Vector Variables")]
+	[SerializeField] private VectorVariable bubbleSize;
+
+	[Header("References")]
+	[SerializeField] private SpriteRenderer bubbleSpriteRenderer;
+
+	[Header("Game Perimeter")]
 	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 #pragma warning restore 0649
+	#endregion
 
 	void Awake()
 	{
@@ -25,6 +32,7 @@ public class GameSetup : MonoBehaviour
 		}
 
 		InstantiateGameBounds();
+		InstantiateBubbleSize();
 	}
 
 	void InstantiateGameBounds()
@@ -36,8 +44,25 @@ public class GameSetup : MonoBehaviour
 		topRightPerimeterPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(topRightScreenCoordinates);
 	}
 
+	void InstantiateBubbleSize()
+	{
+		bubbleSize.RuntimeValue = bubbleSpriteRenderer.sprite.bounds.size;
+	}
+
 	bool HasMissingReference()
 	{
+		if (bubbleSize == null)
+		{
+			Debug.LogError("Missing reference to bubble size.");
+			return true;
+		}
+
+		if (bubbleSpriteRenderer == null)
+		{
+			Debug.LogError("Missing reference to bubble sprite renderer.");
+			return true;
+		}
+
 		if (bottomLeftPerimeterPoint == null)
 		{
 			Debug.LogError("Missing reference to bottom left perimeter point.");
