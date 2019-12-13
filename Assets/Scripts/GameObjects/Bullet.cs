@@ -66,6 +66,7 @@ public class Bullet : MonoBehaviour
 
 		Vector3 currPosition = transform.position;
 		float halfHeight = dimensions.y * 0.5f;
+		float halfWidth = dimensions.x * 0.5f;
 
 		// on reach top of game perimeter 
 		if (currPosition.y >= topRightPerimeterPoint.RuntimeValue.y - halfHeight)
@@ -73,6 +74,16 @@ public class Bullet : MonoBehaviour
 			shouldMove = false;
 			transform.position = initialPosition;
 			return;
+		}
+
+		if (currPosition.x <= bottomLeftPerimeterPoint.RuntimeValue.x + halfWidth)
+		{
+			currDirection = Vector3.Reflect(currDirection, Vector3.right);
+		}
+
+		if (currPosition.x >= topRightPerimeterPoint.RuntimeValue.x - halfWidth)
+		{
+			currDirection = Vector3.Reflect(currDirection, Vector3.left);
 		}
 
 		// TODO: on hit a bubble target
