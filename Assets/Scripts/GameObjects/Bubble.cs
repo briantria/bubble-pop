@@ -103,7 +103,8 @@ public class Bubble : MonoBehaviour
 		bulletHitPosition.RuntimeValue = bulletPosition.RuntimeValue;
 		bubbleHitCoordinates.RuntimeValue = new Vector3(Coordinates.x, Coordinates.y, 0);
 
-		Debug.Log("hit coords: " + bubbleHitCoordinates.RuntimeValue);
+		// Debug.Log("hit coords: " + bubbleHitCoordinates.RuntimeValue);
+		// tintRenderer.color = Color.yellow;
 
 		if (onBulletHit != null)
 		{

@@ -141,6 +141,15 @@ public class LevelGenerator : MonoBehaviour
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 				bubbleObject.transform.localPosition = bubblePosition;
 				bubbleObject.SetActive(true);
+
+				Bubble bubble = bubbleObject.GetComponent<Bubble>();
+				if (bubble == null)
+				{
+					Debug.LogError("Missing bubble component.");
+					continue;
+				}
+
+				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
 			}
 		}
 	}
