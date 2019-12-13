@@ -22,6 +22,7 @@ public class AimManager : MonoBehaviour
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 
 	[Header("References")]
+	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private Transform particleTransform;
 #pragma warning restore 0649
@@ -47,6 +48,11 @@ public class AimManager : MonoBehaviour
 		if (aimTrailLength == null)
 		{
 			Debug.LogError("Missing reference to aim trail length.");
+			return true;
+		}
+		if (bubbleSize == null)
+		{
+			Debug.LogError("Missing reference to bubble size.");
 			return true;
 		}
 
@@ -113,12 +119,11 @@ public class AimManager : MonoBehaviour
 		Vector3 position = transform.position;
 		Vector3 aimDirection = Vector3.zero;
 
-		if (targetPosition.y <= position.y)
+		if (targetPosition.y <= position.y + bubbleSize.RuntimeValue.y)
 		{
 			ShowTrailParticles(false);
 			return;
 		}
-
 
 		targetPosition.z = 0;
 		position.z = 0;
