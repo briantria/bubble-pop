@@ -1,6 +1,6 @@
 ﻿/* author: Brian Tria
  * created: Dec 13, 2019
- * description: 
+ * description: Using Offset Coordinates for layout. see: https://www.redblobgames.com/grids/hexagons/
  */
 
 using System.IO;
@@ -99,10 +99,7 @@ public class LevelGenerator : MonoBehaviour
 			return;
 		}
 
-		/*	assumptions:
-		 *		each row count alternates between odd and even
-		 *
-		 *	tags:
+		/*	tags:
 		 * 		- 0 -> space
 		 * 		- 1, 2, 3, ... n -> bubble with given type (color, powerup, etc...)
 		 */
@@ -120,7 +117,8 @@ public class LevelGenerator : MonoBehaviour
 			float offsetX = -(columnCount / 2) * bubbleSize.RuntimeValue.x;
 			float offsetY = (lastRowIdx - rowIdx) * bubbleSize.RuntimeValue.y;
 
-			if (columnCount % 2 == 0)
+			// offset odd-indexed rows 
+			if (rowIdx % 2 > 0)
 			{
 				offsetX += bubbleSize.RuntimeValue.x * 0.5f;
 			}

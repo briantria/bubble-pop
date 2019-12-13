@@ -18,7 +18,8 @@ public class Player : MonoBehaviour
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBubbleShoot;
 
-	[Header("Prefab References")]
+	[Header("References")]
+	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private GameObject bubbleBulletPrefab;
 	[SerializeField] private GameObject aimManagerPrefab;
@@ -72,9 +73,10 @@ public class Player : MonoBehaviour
 			return true;
 		}
 
-		if (onBubbleShoot == null)
+		if (bubbleSize == null)
 		{
-			Debug.LogError("Missing reference to bubble shoot event.");
+			Debug.LogError("Missing reference to bubble bubble size.");
+			return true;
 		}
 
 		return false;
@@ -99,7 +101,12 @@ public class Player : MonoBehaviour
 
 		aimManager.SetActive(false);
 
-		if (transform.position.y < targetPoint.RuntimeValue.y)
+		if (transform.position.y + bubbleSize.RuntimeValue.y >= targetPoint.RuntimeValue.y)
+		{
+			return;
+		}
+
+		if (onBubbleShoot != null)
 		{
 			onBubbleShoot.Raise();
 		}

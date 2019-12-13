@@ -22,8 +22,10 @@ public class Bullet : MonoBehaviour
 
 	[Header("References")]
 	[SerializeField] private VectorVariable targetPoint;
+	[SerializeField] private VectorVariable bulletPosition;
 
-	// TODO: reference to a list of targets
+	[Header("Game Events")]
+	[SerializeField] private GameEvent onUpdateBulletPosition;
 #pragma warning restore 0649
 
 	private bool shouldMove = false;
@@ -71,8 +73,7 @@ public class Bullet : MonoBehaviour
 		// on reach top of game perimeter 
 		if (currPosition.y >= topRightPerimeterPoint.RuntimeValue.y - halfHeight)
 		{
-			shouldMove = false;
-			transform.position = initialPosition;
+			Reload();
 			return;
 		}
 
@@ -89,7 +90,14 @@ public class Bullet : MonoBehaviour
 		// TODO: on hit a bubble target
 
 		Vector3 deltaPosition = currDirection * shootingSpeed.InitValue * Time.deltaTime;
-		transform.position += deltaPosition;
+		currPosition += deltaPosition;
+		bulletPosition.RuntimeValue = currPosition;
+		transform.position = currPosition;
+
+		if (onUpdateBulletPosition != null)
+		{
+			onUpdateBulletPosition.Raise();
+		}
 	}
 	#endregion
 
@@ -114,6 +122,18 @@ public class Bullet : MonoBehaviour
 			return true;
 		}
 
+		if (bulletPosition == null)
+		{
+			Debug.LogError("Missing reference to bullet position.");
+			return true;
+		}
+
+		if (targetPoint == null)
+		{
+			Debug.LogError("Missing reference to target point.");
+			return true;
+		}
+
 		return false;
 	}
 	#endregion
@@ -130,6 +150,12 @@ public class Bullet : MonoBehaviour
 		currPosition.z = 0;
 
 		currDirection = (targetPosition - currPosition).normalized;
+	}
+
+	public void Reload()
+	{
+		shouldMove = false;
+		transform.position = initialPosition;
 	}
 	#endregion
 }
