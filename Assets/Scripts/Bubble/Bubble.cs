@@ -11,17 +11,22 @@ public class Bubble : MonoBehaviour
 {
 	#region Properties
 	public Vector2 Coordinates;
+	public BubbleType Type;
 	#endregion
 
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
+	[Header("Settings")]
 	[SerializeField] private VectorVariable bubbleSize;
+	[SerializeField] private SpriteRenderer tintRenderer;
+	[SerializeField] private BubbleTypeInfoListObject bubbleTypeInfoListObject;
+
+	[Header("Collision")]
 	[SerializeField] private VectorVariable bulletPosition;
 	[SerializeField] private VectorVariable bulletHitPosition;
 	[SerializeField] private VectorVariable bubbleHitCoordinates;
-	[SerializeField] private SpriteRenderer tintRenderer;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBulletHit;
@@ -30,15 +35,38 @@ public class Bubble : MonoBehaviour
 	private bool shouldTriggerBulletHit = true;
 	#endregion
 
-	void Start()
+	void OnEnable()
 	{
 		if (HasMissingReference())
 		{
 			return;
 		}
 
-		// TODO: buble info setup
-		// - match type, color, ...
+		if (Type == BubbleType.None)
+		{
+			gameObject.SetActive(false);
+			return;
+		}
+
+		bool hasValidType = false;
+		List<BubbleTypeInfo> bubbleTypeInfoList = bubbleTypeInfoListObject.BubbleTypeInfoList;
+		for (int idx = 0; idx < bubbleTypeInfoList.Count; ++idx)
+		{
+			BubbleTypeInfo bubbleTypeInfo = bubbleTypeInfoList[idx];
+			hasValidType = Type == bubbleTypeInfo.MatchType;
+
+			if (hasValidType)
+			{
+				tintRenderer.color = bubbleTypeInfo.InitColorValue;
+				break;
+			}
+		}
+
+		if (!hasValidType)
+		{
+			Debug.LogError("Unknown bubble type: " + Type);
+			gameObject.SetActive(false);
+		}
 	}
 
 	#region Private Methods
@@ -71,6 +99,12 @@ public class Bubble : MonoBehaviour
 		if (tintRenderer == null)
 		{
 			Debug.LogError("Missing reference to tint renderer.");
+			return true;
+		}
+
+		if (bubbleTypeInfoListObject == null)
+		{
+			Debug.LogError("Missing reference to bubble type list object.");
 			return true;
 		}
 

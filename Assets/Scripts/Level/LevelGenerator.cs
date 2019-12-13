@@ -140,7 +140,6 @@ public class LevelGenerator : MonoBehaviour
 
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 				bubbleObject.transform.localPosition = bubblePosition;
-				bubbleObject.SetActive(true);
 
 				Bubble bubble = bubbleObject.GetComponent<Bubble>();
 				if (bubble == null)
@@ -149,7 +148,9 @@ public class LevelGenerator : MonoBehaviour
 					continue;
 				}
 
+				bubble.Type = (BubbleType)columns[columnIdx];
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
+				bubbleObject.SetActive(true);
 			}
 		}
 	}
