@@ -111,27 +111,28 @@ public class LevelGenerator : MonoBehaviour
 		int rowCount = rows.Count;
 		int lastRowIdx = rowCount - 1;
 
-		Debug.Log("row count: " + rowCount);
-
 		// starting from bottom row (closest to player)
 		for (int rowIdx = lastRowIdx; rowIdx >= 0; --rowIdx)
 		{
 			List<int> columns = rows[rowIdx].columns;
 			int columnCount = columns.Count;
-			Debug.Log("columnCount: " + columnCount);
 
-			float offsetX = -(columnCount * 0.5f) * bubbleSize.RuntimeValue.x;
+			float offsetX = -(columnCount / 2) * bubbleSize.RuntimeValue.x;
 			float offsetY = (lastRowIdx - rowIdx) * bubbleSize.RuntimeValue.y;
+
+			if (columnCount % 2 == 0)
+			{
+				offsetX += bubbleSize.RuntimeValue.x * 0.5f;
+			}
+
 			Vector3 bubblePosition = new Vector3(offsetX, offsetY, 0);
 
 			// from left to right...
 			for (int columnIdx = 0; columnIdx < columnCount; ++columnIdx)
 			{
-				Debug.Log("row count: " + columnCount);
 				if (columns[columnIdx] == 0)
 				{
 					// skip position; keeping a blank space
-					Debug.Log("skip");
 					continue;
 				}
 
@@ -140,7 +141,6 @@ public class LevelGenerator : MonoBehaviour
 				inactiveBubbleTargets.RemoveAt(0);
 
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
-				Debug.Log("position: " + bubblePosition);
 				bubbleObject.transform.localPosition = bubblePosition;
 				bubbleObject.SetActive(true);
 			}

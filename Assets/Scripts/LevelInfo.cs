@@ -20,7 +20,7 @@ public class LevelInfo
 		string jsonString = reader.ReadToEnd();
 		reader.Close();
 
-		Debug.Log("json string: " + jsonString);
+		// Debug.Log("json string: " + jsonString);
 		return JsonUtility.FromJson<LevelInfo>(jsonString);
 	}
 }
