@@ -49,3 +49,4 @@ MonoBehaviour:
     type: 2}
   bubblePrefab: {fileID: 4726725535379041231, guid: c7de560414b50904cba4ca76537a60ed,
     type: 3}
+  bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}

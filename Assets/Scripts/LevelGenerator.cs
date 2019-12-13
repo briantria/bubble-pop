@@ -10,6 +10,10 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
+	#region Constants
+	const int TOTAL_BUBBLE_TARGET = 200;
+	#endregion
+
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
@@ -20,29 +24,26 @@ public class LevelGenerator : MonoBehaviour
 
 	[Header("References")]
 	[SerializeField] private GameObject bubblePrefab;
-
+	[SerializeField] private VectorVariable bubbleSize;
 #pragma warning restore 0649
+
+	private LevelInfo levelInfo;
+	private List<GameObject> activeBubbleTargets = new List<GameObject>();
+	private List<GameObject> inactiveBubbleTargets = new List<GameObject>();
 	#endregion
 
 	// TODO: take json input for level design
 
 	void Start()
 	{
-		/*
-		0 -> space
-		1 - 9, A - Z -> bubble with given type
+		if (HasMissingReference())
+		{
+			return;
+		}
 
-		if even ->
-		if odd ->
-		*/
-
-		LoadJsonLevel();
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		LoadLevel();
+		InstantiateBubblePool();
+		SetupLevel();
 	}
 
 	#region Private Methods
@@ -66,17 +67,84 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
+		if (bubbleSize == null)
+		{
+			Debug.LogError("Missing reference to bubble size.");
+			return true;
+		}
+
 		return false;
 	}
 
-	void LoadJsonLevel()
+	void LoadLevel()
 	{
-		string path = "Assets/Resources/Level1.json";
+		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
+	}
 
-		//Read the text from directly from the test.txt file
-		StreamReader reader = new StreamReader(path);
-		Debug.Log(reader.ReadToEnd());
-		reader.Close();
+	void InstantiateBubblePool()
+	{
+		for (int idx = 0; idx < TOTAL_BUBBLE_TARGET; ++idx)
+		{
+			GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
+			bubble.SetActive(false);
+			inactiveBubbleTargets.Add(bubble);
+		}
+	}
+
+	void SetupLevel()
+	{
+		if (levelInfo == null)
+		{
+			Debug.LogError("Unable to generate level info.");
+			return;
+		}
+
+		/*	assumptions:
+		 *		each row count alternates between odd and even
+		 *
+		 *	tags:
+		 * 		- 0 -> space
+		 * 		- 1, 2, 3, ... n -> bubble with given type (color, powerup, etc...)
+		 */
+
+		List<Row> rows = levelInfo.rows;
+		int rowCount = rows.Count;
+		int lastRowIdx = rowCount - 1;
+
+		Debug.Log("row count: " + rowCount);
+
+		// starting from bottom row (closest to player)
+		for (int rowIdx = lastRowIdx; rowIdx >= 0; --rowIdx)
+		{
+			List<int> columns = rows[rowIdx].columns;
+			int columnCount = columns.Count;
+			Debug.Log("columnCount: " + columnCount);
+
+			float offsetX = -(columnCount * 0.5f) * bubbleSize.RuntimeValue.x;
+			float offsetY = (lastRowIdx - rowIdx) * bubbleSize.RuntimeValue.y;
+			Vector3 bubblePosition = new Vector3(offsetX, offsetY, 0);
+
+			// from left to right...
+			for (int columnIdx = 0; columnIdx < columnCount; ++columnIdx)
+			{
+				Debug.Log("row count: " + columnCount);
+				if (columns[columnIdx] == 0)
+				{
+					// skip position; keeping a blank space
+					Debug.Log("skip");
+					continue;
+				}
+
+				GameObject bubbleObject = inactiveBubbleTargets[0];
+				activeBubbleTargets.Add(bubbleObject);
+				inactiveBubbleTargets.RemoveAt(0);
+
+				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
+				Debug.Log("position: " + bubblePosition);
+				bubbleObject.transform.localPosition = bubblePosition;
+				bubbleObject.SetActive(true);
+			}
+		}
 	}
 	#endregion
 }

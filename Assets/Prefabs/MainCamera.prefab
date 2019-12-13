@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72afe2cc4f940841ba84dca138869f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  bubbleSpriteRenderer: {fileID: 4726725535379041230, guid: c7de560414b50904cba4ca76537a60ed,
+    type: 3}
   bottomLeftPerimeterPoint: {fileID: 11400000, guid: 6bd88d85150e7884a95b0e7cdc191ef9,
     type: 2}
   topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,

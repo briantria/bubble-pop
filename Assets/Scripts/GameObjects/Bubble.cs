@@ -9,15 +9,21 @@ using UnityEngine;
 
 public class Bubble : MonoBehaviour
 {
-	// Start is called before the first frame update
+	#region Member Variables
+	// known issue for SerializedField throwing warnings
+	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
+#pragma warning disable 0649
+	[SerializeField] private VectorVariable bubbleSize;
+#pragma warning restore 0649
+	#endregion
+
 	void Start()
 	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+		if (spriteRenderer == null)
+		{
+			Debug.LogError("Missing bubble sprite renderer.");
+			return;
+		}
 	}
 }
