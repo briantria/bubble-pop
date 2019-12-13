@@ -16,13 +16,13 @@ public class AimManager : MonoBehaviour
 	[Header("Settings")]
 	[SerializeField] private FloatVariable aimTrailLength;
 	[SerializeField] private FloatVariable aimTrailSpacing;
-	[SerializeField] private VectorVariable targetPoint;
 
 	[Header("Game Perimeter")]
 	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 
 	[Header("References")]
+	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private Transform particleTransform;
 #pragma warning restore 0649
 
@@ -130,7 +130,5 @@ public class AimManager : MonoBehaviour
 		{
 			trailParticleList[idx].localPosition = aimDirection * aimTrailSpacing.InitValue * idx;
 		}
-
-		// particleTransform.localPosition = aimDirection;
 	}
 }

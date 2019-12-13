@@ -46,10 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e1598a450080b408a7be26d64786c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootingSpeed: {fileID: 11400000, guid: 7f85222f544b0ac499151e2eb8b6e824, type: 2}
   onBubbleShoot: {fileID: 11400000, guid: 4ee2f4ae98ee6ce4ba1475f1df681b80, type: 2}
-  onCancelBubbleShoot: {fileID: 11400000, guid: 3f0b895b470da3047b4396d08d480453,
-    type: 2}
+  targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bubbleBulletPrefab: {fileID: 4726725535379041231, guid: 88b2144d8344056438fa80eeae1495a4,
     type: 3}
   aimManagerPrefab: {fileID: 5251535563366165341, guid: 4f1486b9c5faa544e97fa9f560e16ca1,

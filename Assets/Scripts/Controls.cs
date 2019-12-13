@@ -38,7 +38,6 @@ public class Controls : MonoBehaviour
 			if (targetPoint != null)
 			{
 				targetPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				//Debug.Log("target pos: " + targetPoint.RuntimeValue);
 			}
 
 			if (onUpdateAimDirection != null)

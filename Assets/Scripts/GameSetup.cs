@@ -12,6 +12,7 @@ public class GameSetup : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
+	[Header("Vector Variables")]
 	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 #pragma warning restore 0649
@@ -28,10 +29,11 @@ public class GameSetup : MonoBehaviour
 
 	void InstantiateGameBounds()
 	{
-		float halfScreenWidth = Screen.width;
-		float halfScreenHeight = Screen.height;
-		bottomLeftPerimeterPoint.RuntimeValue = new Vector3(-halfScreenWidth, -halfScreenHeight, 0);
-		topRightPerimeterPoint.RuntimeValue = new Vector3(halfScreenWidth, halfScreenHeight, 0);
+		Vector3 bottomLeftScreenCoordinates = new Vector3(0, 0, 0);
+		Vector3 topRightScreenCoordinates = new Vector3(Screen.width, Screen.height, 0);
+
+		bottomLeftPerimeterPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(bottomLeftScreenCoordinates);
+		topRightPerimeterPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(topRightScreenCoordinates);
 	}
 
 	bool HasMissingReference()

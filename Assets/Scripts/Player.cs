@@ -9,18 +9,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+	// TODO: preve next bubble type
+
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-	[Header("Settings")]
-	[SerializeField] private FloatVariable shootingSpeed;
-
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBubbleShoot;
-	[SerializeField] private GameEvent onCancelBubbleShoot;
 
 	[Header("Prefab References")]
+	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private GameObject bubbleBulletPrefab;
 	[SerializeField] private GameObject aimManagerPrefab;
 #pragma warning restore 0649
@@ -55,12 +54,6 @@ public class Player : MonoBehaviour
 
 	bool HasMissingReference()
 	{
-		if (shootingSpeed == null)
-		{
-			Debug.LogError("Missing reference to shooting speed.");
-			return true;
-		}
-
 		if (bubbleBulletPrefab == null)
 		{
 			Debug.LogError("Missing reference to bubble bullet prefab.");
@@ -73,26 +66,42 @@ public class Player : MonoBehaviour
 			return true;
 		}
 
+		if (targetPoint == null)
+		{
+			Debug.LogError("Missing reference to target point.");
+			return true;
+		}
+
+		if (onBubbleShoot == null)
+		{
+			Debug.LogError("Missing reference to bubble shoot event.");
+		}
+
 		return false;
 	}
 
 	public void StartAim()
 	{
+		if (HasMissingReference())
+		{
+			return;
+		}
+
 		aimManager.SetActive(true);
 	}
 
 	public void AttemptBubbleShoot()
 	{
+		if (HasMissingReference())
+		{
+			return;
+		}
+
 		aimManager.SetActive(false);
-	}
 
-	public void BubbleShoot()
-	{
-		// TODO: check if target position is valid
-	}
-
-	public void CancelBubbleShoot()
-	{
-
+		if (transform.position.y < targetPoint.RuntimeValue.y)
+		{
+			onBubbleShoot.Raise();
+		}
 	}
 }
