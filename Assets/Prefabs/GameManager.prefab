@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5736816599910381311}
   - component: {fileID: 5736816599910381308}
-  - component: {fileID: 114728988026487630}
+  - component: {fileID: 114428295685472130}
+  - component: {fileID: 114532757438464926}
   m_Layer: 0
-  m_Name: LevelGenerator
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,16 +45,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74985ec50f08f841ab8a9313fd5a317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomLeftPerimeterPoint: {fileID: 11400000, guid: 6bd88d85150e7884a95b0e7cdc191ef9,
-    type: 2}
-  topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,
-    type: 2}
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
   bubblePrefab: {fileID: 4726725535379041231, guid: c7de560414b50904cba4ca76537a60ed,
     type: 3}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
+    type: 2}
+  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
+    type: 2}
+--- !u!114 &114428295685472130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34fd506aba2f25c439df544119753a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
+    type: 2}
+  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
+    type: 2}
   onBulletReload: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
---- !u!114 &114728988026487630
+--- !u!114 &114532757438464926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,8 +86,8 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5736816599910381308}
-        m_MethodName: PopHitBubbles
+      - m_Target: {fileID: 114428295685472130}
+        m_MethodName: PopMatchedBubbles
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

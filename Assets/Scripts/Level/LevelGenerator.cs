@@ -18,25 +18,18 @@ public class LevelGenerator : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-	[Header("Game Perimeter")]
-	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
-	[SerializeField] private VectorVariable topRightPerimeterPoint;
-
 	[Header("References")]
 	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private GameObject bubblePrefab;
 	[SerializeField] private VectorVariable bubbleSize;
-
-	[Header("Game Events")]
-	[SerializeField] private GameEvent onBulletReload;
+	[SerializeField] private GameObjectList activeBubbleObjectList;
+	[SerializeField] private GameObjectList inactiveBubbleObjectList;
 #pragma warning restore 0649
 
 	private LevelInfo levelInfo;
-	private List<GameObject> activeBubbleTargets = new List<GameObject>();
-	private List<GameObject> inactiveBubbleTargets = new List<GameObject>();
 	#endregion
 
-	void Start()
+	void Awake()
 	{
 		if (HasMissingReference())
 		{
@@ -51,18 +44,6 @@ public class LevelGenerator : MonoBehaviour
 	#region Private Methods
 	bool HasMissingReference()
 	{
-		if (bottomLeftPerimeterPoint == null)
-		{
-			Debug.LogError("Missing reference to bottom left perimeter point.");
-			return true;
-		}
-
-		if (topRightPerimeterPoint == null)
-		{
-			Debug.LogError("Missing reference to top right perimeter point.");
-			return true;
-		}
-
 		if (bubblePrefab == null)
 		{
 			Debug.LogError("Missing reference to bubble prefab.");
@@ -81,9 +62,15 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
-		if (onBulletReload == null)
+		if (activeBubbleObjectList == null)
 		{
-			Debug.LogError("Missing reference to bullet reload.");
+			Debug.LogError("Missing reference to active bubble object list.");
+			return true;
+		}
+
+		if (inactiveBubbleObjectList == null)
+		{
+			Debug.LogError("Missing reference to inactive bubble object list.");
 			return true;
 		}
 
@@ -93,6 +80,8 @@ public class LevelGenerator : MonoBehaviour
 	void LoadLevel()
 	{
 		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
+		activeBubbleObjectList.Contents = new List<GameObject>();
+		inactiveBubbleObjectList.Contents = new List<GameObject>();
 	}
 
 	void InstantiateBubblePool()
@@ -101,7 +90,7 @@ public class LevelGenerator : MonoBehaviour
 		{
 			GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
 			bubble.SetActive(false);
-			inactiveBubbleTargets.Add(bubble);
+			inactiveBubbleObjectList.Contents.Add(bubble);
 		}
 	}
 
@@ -148,9 +137,9 @@ public class LevelGenerator : MonoBehaviour
 					continue;
 				}
 
-				GameObject bubbleObject = inactiveBubbleTargets[0];
-				activeBubbleTargets.Add(bubbleObject);
-				inactiveBubbleTargets.RemoveAt(0);
+				GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
+				activeBubbleObjectList.Contents.Add(bubbleObject);
+				inactiveBubbleObjectList.Contents.RemoveAt(0);
 
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 				bubbleObject.transform.localPosition = bubblePosition;
@@ -167,51 +156,15 @@ public class LevelGenerator : MonoBehaviour
 				bubbleObject.SetActive(true);
 			}
 		}
-
-		ChooseNewBulletType();
 	}
 	#endregion
 
 	#region Public Methods
-	public void PopHitBubbles()
-	{
-		// TODO: check matches
-		// TODO: recursive call to pop neighboring bubbles
 
-		ChooseNewBulletType();
-	}
 
-	public void ChooseNewBulletType()
-	{
-		List<BubbleType> activeBubbleTypes = new List<BubbleType>();
-
-		foreach (GameObject bubbleObject in activeBubbleTargets)
-		{
-			Bubble bubble = bubbleObject.GetComponent<Bubble>();
-
-			if (bubble == null)
-			{
-				Debug.LogError("Missing bubble component.");
-				continue;
-			}
-
-			BubbleType bubbleType = bubble.Type;
-			if (!activeBubbleTypes.Contains(bubbleType))
-			{
-				activeBubbleTypes.Add(bubbleType);
-			}
-		}
-
-		int randomIdx = Random.Range(0, activeBubbleTypes.Count);
-		bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
-
-		if (onBulletReload != null)
-		{
-			onBulletReload.Raise();
-		}
-	}
 	#endregion
 
+	// TODO: active and inactive list convert to scriptable objects
 	// TODO: On bubble target hit matched, clear up connected matches
 	// TODO: update active bubble types
 }

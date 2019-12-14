@@ -3,7 +3,6 @@
  * description: 
  */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
 	#region Properties
-	[NonSerialized] public BubbleType Type;
+	[System.NonSerialized] public BubbleType Type;
 	#endregion
 
 	#region Member Variables
@@ -30,6 +29,8 @@ public class Bullet : MonoBehaviour
 	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private VectorVariable bulletPosition;
+	[SerializeField] private GameObjectList activeBubbleObjectList;
+	[SerializeField] private GameObjectList inactiveBubbleObjectList;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onUpdateBulletPosition;
@@ -60,6 +61,7 @@ public class Bullet : MonoBehaviour
 
 		initialPosition = transform.position;
 		dimensions = spriteRenderer.sprite.bounds.size;
+		Reload();
 	}
 
 	void Update()
@@ -158,7 +160,44 @@ public class Bullet : MonoBehaviour
 			return true;
 		}
 
+		if (activeBubbleObjectList == null)
+		{
+			Debug.LogError("Missing reference to active bubble object list.");
+			return true;
+		}
+
+		if (inactiveBubbleObjectList == null)
+		{
+			Debug.LogError("Missing reference to inactive bubble object list.");
+			return true;
+		}
+
 		return false;
+	}
+
+	void ChooseNewBulletType()
+	{
+		List<BubbleType> activeBubbleTypes = new List<BubbleType>();
+
+		foreach (GameObject bubbleObject in activeBubbleObjectList.Contents)
+		{
+			Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
+			if (bubble == null)
+			{
+				Debug.LogError("Missing bubble component.");
+				continue;
+			}
+
+			BubbleType bubbleType = bubble.Type;
+			if (!activeBubbleTypes.Contains(bubbleType))
+			{
+				activeBubbleTypes.Add(bubbleType);
+			}
+		}
+
+		int randomIdx = Random.Range(0, activeBubbleTypes.Count);
+		bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
 	}
 	#endregion
 
@@ -176,9 +215,9 @@ public class Bullet : MonoBehaviour
 		currDirection = (targetPosition - currPosition).normalized;
 	}
 
-	// FIXME: not called on initial choose bullet type
 	public void Reload()
 	{
+		ChooseNewBulletType();
 		shouldMove = false;
 		Type = (BubbleType)bubbleBulletType.RuntimeValue;
 		transform.position = initialPosition;
