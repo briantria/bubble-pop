@@ -3,6 +3,7 @@
  * description: 
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,8 @@ using UnityEngine;
 public class Bubble : MonoBehaviour
 {
 	#region Properties
-	public Vector2 Coordinates;
-	public BubbleType Type;
+	[NonSerialized] public Vector2 Coordinates;
+	[NonSerialized] public BubbleType Type;
 	#endregion
 
 	#region Member Variables

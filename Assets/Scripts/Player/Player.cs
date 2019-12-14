@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	// TODO: preve next bubble type
+	// TODO: preview next bubble type
 
 	#region Member Variables
 	// known issue for SerializedField throwing warnings

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5736816599910381311}
   - component: {fileID: 5736816599910381308}
+  - component: {fileID: 114728988026487630}
   m_Layer: 0
   m_Name: LevelGenerator
   m_TagString: Untagged
@@ -47,6 +48,35 @@ MonoBehaviour:
     type: 2}
   topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,
     type: 2}
+  bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
   bubblePrefab: {fileID: 4726725535379041231, guid: c7de560414b50904cba4ca76537a60ed,
     type: 3}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  onBulletReload: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
+--- !u!114 &114728988026487630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5736816599910381308}
+        m_MethodName: PopHitBubbles
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

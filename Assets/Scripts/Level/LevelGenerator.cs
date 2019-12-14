@@ -23,16 +23,18 @@ public class LevelGenerator : MonoBehaviour
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 
 	[Header("References")]
+	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private GameObject bubblePrefab;
 	[SerializeField] private VectorVariable bubbleSize;
+
+	[Header("Game Events")]
+	[SerializeField] private GameEvent onBulletReload;
 #pragma warning restore 0649
 
 	private LevelInfo levelInfo;
 	private List<GameObject> activeBubbleTargets = new List<GameObject>();
 	private List<GameObject> inactiveBubbleTargets = new List<GameObject>();
 	#endregion
-
-	// TODO: take json input for level design
 
 	void Start()
 	{
@@ -70,6 +72,18 @@ public class LevelGenerator : MonoBehaviour
 		if (bubbleSize == null)
 		{
 			Debug.LogError("Missing reference to bubble size.");
+			return true;
+		}
+
+		if (bubbleBulletType == null)
+		{
+			Debug.LogError("Missing reference to bubble bullet type.");
+			return true;
+		}
+
+		if (onBulletReload == null)
+		{
+			Debug.LogError("Missing reference to bullet reload.");
 			return true;
 		}
 
@@ -153,6 +167,51 @@ public class LevelGenerator : MonoBehaviour
 				bubbleObject.SetActive(true);
 			}
 		}
+
+		ChooseNewBulletType();
 	}
 	#endregion
+
+	#region Public Methods
+	public void PopHitBubbles()
+	{
+		// TODO: check matches
+		// TODO: recursive call to pop neighboring bubbles
+
+		ChooseNewBulletType();
+	}
+
+	public void ChooseNewBulletType()
+	{
+		List<BubbleType> activeBubbleTypes = new List<BubbleType>();
+
+		foreach (GameObject bubbleObject in activeBubbleTargets)
+		{
+			Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
+			if (bubble == null)
+			{
+				Debug.LogError("Missing bubble component.");
+				continue;
+			}
+
+			BubbleType bubbleType = bubble.Type;
+			if (!activeBubbleTypes.Contains(bubbleType))
+			{
+				activeBubbleTypes.Add(bubbleType);
+			}
+		}
+
+		int randomIdx = Random.Range(0, activeBubbleTypes.Count);
+		bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
+
+		if (onBulletReload != null)
+		{
+			onBulletReload.Raise();
+		}
+	}
+	#endregion
+
+	// TODO: On bubble target hit matched, clear up connected matches
+	// TODO: update active bubble types
 }

@@ -3,12 +3,17 @@
  * description: 
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+	#region Properties
+	[NonSerialized] public BubbleType Type;
+	#endregion
+
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
@@ -21,11 +26,14 @@ public class Bullet : MonoBehaviour
 	[SerializeField] private VectorVariable topRightPerimeterPoint;
 
 	[Header("References")]
+	[SerializeField] private IntVariable bubbleBulletType;
+	[SerializeField] private BubbleTypeInfoListObject bubbleTypeInfoListObject;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private VectorVariable bulletPosition;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onUpdateBulletPosition;
+	[SerializeField] private SpriteRenderer tintRenderer;
 #pragma warning restore 0649
 
 	private bool shouldMove = false;
@@ -87,8 +95,6 @@ public class Bullet : MonoBehaviour
 			currDirection = Vector3.Reflect(currDirection, Vector3.left);
 		}
 
-		// TODO: on hit a bubble target
-
 		Vector3 deltaPosition = currDirection * shootingSpeed.InitValue * Time.deltaTime;
 		currPosition += deltaPosition;
 		bulletPosition.RuntimeValue = currPosition;
@@ -122,6 +128,12 @@ public class Bullet : MonoBehaviour
 			return true;
 		}
 
+		if (tintRenderer == null)
+		{
+			Debug.LogError("Missing reference to tint renderer.");
+			return true;
+		}
+
 		if (bulletPosition == null)
 		{
 			Debug.LogError("Missing reference to bullet position.");
@@ -131,6 +143,18 @@ public class Bullet : MonoBehaviour
 		if (targetPoint == null)
 		{
 			Debug.LogError("Missing reference to target point.");
+			return true;
+		}
+
+		if (bubbleBulletType == null)
+		{
+			Debug.LogError("Missing reference to bubble bullet type.");
+			return true;
+		}
+
+		if (bubbleTypeInfoListObject == null)
+		{
+			Debug.LogError("Missing reference to bubble type info list object.");
 			return true;
 		}
 
@@ -152,10 +176,31 @@ public class Bullet : MonoBehaviour
 		currDirection = (targetPosition - currPosition).normalized;
 	}
 
+	// FIXME: not called on initial choose bullet type
 	public void Reload()
 	{
 		shouldMove = false;
+		Type = (BubbleType)bubbleBulletType.RuntimeValue;
 		transform.position = initialPosition;
+
+		bool hasValidType = false;
+		List<BubbleTypeInfo> bubbleTypeInfoList = bubbleTypeInfoListObject.BubbleTypeInfoList;
+		for (int idx = 0; idx < bubbleTypeInfoList.Count; ++idx)
+		{
+			BubbleTypeInfo bubbleTypeInfo = bubbleTypeInfoList[idx];
+			hasValidType = Type == bubbleTypeInfo.MatchType;
+
+			if (hasValidType)
+			{
+				tintRenderer.color = bubbleTypeInfo.InitColorValue;
+				break;
+			}
+		}
+
+		if (!hasValidType)
+		{
+			Debug.LogError("Unknown bubble type: " + Type);
+		}
 	}
 	#endregion
 }
