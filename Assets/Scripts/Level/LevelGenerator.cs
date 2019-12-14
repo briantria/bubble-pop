@@ -1,6 +1,7 @@
 ﻿/* author: Brian Tria
  * created: Dec 13, 2019
- * description: Using Offset Coordinates for layout. see: https://www.redblobgames.com/grids/hexagons/
+ * description: Using Offset Coordinates for layout. see: https://www.redblobgames.com/grids/hexagons/ 
+ *				We're using Odd-Offset row coordinates.
  */
 
 using System.IO;
@@ -19,9 +20,11 @@ public class LevelGenerator : MonoBehaviour
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
 	[Header("References")]
-	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private GameObject bubblePrefab;
+	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private VectorVariable bubbleSize;
+	[SerializeField] private VectorVariable levelMapDimension;
+	[SerializeField] private IntVariableList levelDataMap;
 	[SerializeField] private GameObjectList activeBubbleObjectList;
 	[SerializeField] private GameObjectList inactiveBubbleObjectList;
 #pragma warning restore 0649
@@ -74,14 +77,28 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
+		if (levelDataMap == null)
+		{
+			Debug.LogError("Missing reference to level data map.");
+			return true;
+		}
+
+		if (levelMapDimension == null)
+		{
+			Debug.LogError("Missing reference to level map dimension.");
+			return true;
+		}
+
 		return false;
 	}
 
 	void LoadLevel()
 	{
 		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
+		levelMapDimension.RuntimeValue = new Vector3(levelInfo.columnCount, levelInfo.rowCount, 0);
 		activeBubbleObjectList.Contents = new List<GameObject>();
 		inactiveBubbleObjectList.Contents = new List<GameObject>();
+		levelDataMap.RuntimeContents = new List<int>();
 	}
 
 	void InstantiateBubblePool()
@@ -109,16 +126,15 @@ public class LevelGenerator : MonoBehaviour
 
 		List<Row> rows = levelInfo.rows;
 		int rowCount = rows.Count;
-		int lastRowIdx = rowCount - 1;
 
 		// starting from bottom row (closest to player)
-		for (int rowIdx = lastRowIdx; rowIdx >= 0; --rowIdx)
+		for (int rowIdx = 0; rowIdx < rowCount; ++rowIdx)
 		{
 			List<int> columns = rows[rowIdx].columns;
 			int columnCount = columns.Count;
 
 			float offsetX = -(columnCount / 2) * bubbleSize.RuntimeValue.x;
-			float offsetY = (lastRowIdx - rowIdx) * bubbleSize.RuntimeValue.y;
+			float offsetY = rowIdx * bubbleSize.RuntimeValue.y;
 
 			// offset odd-indexed rows 
 			if (rowIdx % 2 > 0)
@@ -131,7 +147,10 @@ public class LevelGenerator : MonoBehaviour
 			// from left to right...
 			for (int columnIdx = 0; columnIdx < columnCount; ++columnIdx)
 			{
-				if (columns[columnIdx] == 0)
+				int levelTileValue = columns[columnIdx];
+				levelDataMap.RuntimeContents.Add(levelTileValue);
+
+				if (levelTileValue == 0)
 				{
 					// skip position; keeping a blank space
 					continue;
@@ -151,7 +170,7 @@ public class LevelGenerator : MonoBehaviour
 					continue;
 				}
 
-				bubble.Type = (BubbleType)columns[columnIdx];
+				bubble.Type = (BubbleType)levelTileValue;
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
 				bubbleObject.SetActive(true);
 			}
@@ -163,8 +182,4 @@ public class LevelGenerator : MonoBehaviour
 
 
 	#endregion
-
-	// TODO: active and inactive list convert to scriptable objects
-	// TODO: On bubble target hit matched, clear up connected matches
-	// TODO: update active bubble types
 }
