@@ -22,7 +22,7 @@ public class Bubble : MonoBehaviour
 	[Header("Settings")]
 	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private SpriteRenderer tintRenderer;
-	[SerializeField] private BubbleTypeInfoListObject bubbleTypeInfoListObject;
+	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
 
 	[Header("Collision")]
 	[SerializeField] private VectorVariable bulletPosition;
@@ -50,10 +50,8 @@ public class Bubble : MonoBehaviour
 		}
 
 		bool hasValidType = false;
-		List<BubbleTypeInfo> bubbleTypeInfoList = bubbleTypeInfoListObject.BubbleTypeInfoList;
-		for (int idx = 0; idx < bubbleTypeInfoList.Count; ++idx)
+		foreach (BubbleTypeInfo bubbleTypeInfo in bubbleTypeInfoList.Contents)
 		{
-			BubbleTypeInfo bubbleTypeInfo = bubbleTypeInfoList[idx];
 			hasValidType = Type == bubbleTypeInfo.MatchType;
 
 			if (hasValidType)
@@ -103,7 +101,7 @@ public class Bubble : MonoBehaviour
 			return true;
 		}
 
-		if (bubbleTypeInfoListObject == null)
+		if (bubbleTypeInfoList == null)
 		{
 			Debug.LogError("Missing reference to bubble type list object.");
 			return true;
@@ -137,9 +135,6 @@ public class Bubble : MonoBehaviour
 
 		bulletHitPosition.RuntimeValue = bulletPosition.RuntimeValue;
 		bubbleHitCoordinates.RuntimeValue = new Vector3(Coordinates.x, Coordinates.y, 0);
-
-		// Debug.Log("hit coords: " + bubbleHitCoordinates.RuntimeValue);
-		// tintRenderer.color = Color.yellow;
 
 		if (onBulletHit != null)
 		{

@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour
 
 	[Header("References")]
 	[SerializeField] private IntVariable bubbleBulletType;
-	[SerializeField] private BubbleTypeInfoListObject bubbleTypeInfoListObject;
+	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private VectorVariable bulletPosition;
 
@@ -152,7 +152,7 @@ public class Bullet : MonoBehaviour
 			return true;
 		}
 
-		if (bubbleTypeInfoListObject == null)
+		if (bubbleTypeInfoList == null)
 		{
 			Debug.LogError("Missing reference to bubble type info list object.");
 			return true;
@@ -184,10 +184,8 @@ public class Bullet : MonoBehaviour
 		transform.position = initialPosition;
 
 		bool hasValidType = false;
-		List<BubbleTypeInfo> bubbleTypeInfoList = bubbleTypeInfoListObject.BubbleTypeInfoList;
-		for (int idx = 0; idx < bubbleTypeInfoList.Count; ++idx)
+		foreach (BubbleTypeInfo bubbleTypeInfo in bubbleTypeInfoList.Contents)
 		{
-			BubbleTypeInfo bubbleTypeInfo = bubbleTypeInfoList[idx];
 			hasValidType = Type == bubbleTypeInfo.MatchType;
 
 			if (hasValidType)

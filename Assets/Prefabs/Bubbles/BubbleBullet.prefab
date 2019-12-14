@@ -180,8 +180,7 @@ MonoBehaviour:
   topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,
     type: 2}
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
-  bubbleTypeInfoListObject: {fileID: 11400000, guid: 2a025eb26d8d40940924457c7f8246a5,
-    type: 2}
+  bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bulletPosition: {fileID: 11400000, guid: 5be531a338a390e4c9bdee4dbfe4189a, type: 2}
   onUpdateBulletPosition: {fileID: 11400000, guid: 768a83455719418419e1dfdbf3bc246f,

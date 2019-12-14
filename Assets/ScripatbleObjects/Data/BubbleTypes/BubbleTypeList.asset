@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e23fc12fc2cb6e342b52ce6467b49584, type: 3}
-  m_Name: BubbleTypeInfoListObject
+  m_Script: {fileID: 11500000, guid: 76a98f572cf59a8419c6154c14e78d0a, type: 3}
+  m_Name: BubbleTypeList
   m_EditorClassIdentifier: 
-  BubbleTypeInfoList:
+  Contents:
   - {fileID: 11400000, guid: e42e090e2bd332c4e88ad48a1a8d8b37, type: 2}
   - {fileID: 11400000, guid: 5c06aa303933eb04388fdbf531b2eded, type: 2}
   - {fileID: 11400000, guid: 7dc5d9a9799714e44a41862d77a69c91, type: 2}
