@@ -175,13 +175,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953dbb08e85b6b04bb70d4f87f5272ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Coordinates: {x: 0, y: 0}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  tintRenderer: {fileID: 4726725535000922533}
+  bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
   bulletPosition: {fileID: 11400000, guid: 5be531a338a390e4c9bdee4dbfe4189a, type: 2}
   bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
   bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
     type: 2}
-  tintRenderer: {fileID: 4726725535000922533}
   onBulletHit: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
 --- !u!114 &114961365927649364
 MonoBehaviour:

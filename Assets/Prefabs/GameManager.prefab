@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5736816599910381310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5736816599910381311}
+  - component: {fileID: 5736816599910381308}
+  - component: {fileID: 114428295685472130}
+  - component: {fileID: 114532757438464926}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5736816599910381311
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5736816599910381308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74985ec50f08f841ab8a9313fd5a317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubblePrefab: {fileID: 4726725535379041231, guid: c7de560414b50904cba4ca76537a60ed,
+    type: 3}
+  bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
+  bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  levelMapDimension: {fileID: 11400000, guid: 3c89ec5f0463fdf4091ca83f8072197e, type: 2}
+  levelDataMap: {fileID: 11400000, guid: 4cae1e667150b2f4994617fc2ee8c7a0, type: 2}
+  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
+    type: 2}
+  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
+    type: 2}
+--- !u!114 &114428295685472130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34fd506aba2f25c439df544119753a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
+  minimumMatchCount: {fileID: 11400000, guid: 6db52e1d26421794dbddb2774848d246, type: 2}
+  levelDataMap: {fileID: 11400000, guid: 4cae1e667150b2f4994617fc2ee8c7a0, type: 2}
+  bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
+  levelMapDimension: {fileID: 11400000, guid: 3c89ec5f0463fdf4091ca83f8072197e, type: 2}
+  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
+    type: 2}
+  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
+    type: 2}
+  bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
+  bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
+    type: 2}
+  onBulletReload: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
+--- !u!114 &114532757438464926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736816599910381310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114428295685472130}
+        m_MethodName: PopMatchedBubbles
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

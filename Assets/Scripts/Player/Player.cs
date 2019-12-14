@@ -9,7 +9,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	// TODO: preve next bubble type
+	// TODO: preview next bubble bullet type
+	// TODO: switch current and next bubble bullet type
 
 	#region Member Variables
 	// known issue for SerializedField throwing warnings

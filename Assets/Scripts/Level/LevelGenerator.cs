@@ -1,6 +1,7 @@
 ﻿/* author: Brian Tria
  * created: Dec 13, 2019
- * description: Using Offset Coordinates for layout. see: https://www.redblobgames.com/grids/hexagons/
+ * description: Using Offset Coordinates for layout. see: https://www.redblobgames.com/grids/hexagons/ 
+ *				We're using Odd-Offset row coordinates.
  */
 
 using System.IO;
@@ -18,23 +19,20 @@ public class LevelGenerator : MonoBehaviour
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
-	[Header("Game Perimeter")]
-	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
-	[SerializeField] private VectorVariable topRightPerimeterPoint;
-
 	[Header("References")]
 	[SerializeField] private GameObject bubblePrefab;
+	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private VectorVariable bubbleSize;
+	[SerializeField] private VectorVariable levelMapDimension;
+	[SerializeField] private IntVariableList levelDataMap;
+	[SerializeField] private GameObjectList activeBubbleObjectList;
+	[SerializeField] private GameObjectList inactiveBubbleObjectList;
 #pragma warning restore 0649
 
 	private LevelInfo levelInfo;
-	private List<GameObject> activeBubbleTargets = new List<GameObject>();
-	private List<GameObject> inactiveBubbleTargets = new List<GameObject>();
 	#endregion
 
-	// TODO: take json input for level design
-
-	void Start()
+	void Awake()
 	{
 		if (HasMissingReference())
 		{
@@ -49,18 +47,6 @@ public class LevelGenerator : MonoBehaviour
 	#region Private Methods
 	bool HasMissingReference()
 	{
-		if (bottomLeftPerimeterPoint == null)
-		{
-			Debug.LogError("Missing reference to bottom left perimeter point.");
-			return true;
-		}
-
-		if (topRightPerimeterPoint == null)
-		{
-			Debug.LogError("Missing reference to top right perimeter point.");
-			return true;
-		}
-
 		if (bubblePrefab == null)
 		{
 			Debug.LogError("Missing reference to bubble prefab.");
@@ -73,12 +59,46 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
+		if (bubbleBulletType == null)
+		{
+			Debug.LogError("Missing reference to bubble bullet type.");
+			return true;
+		}
+
+		if (activeBubbleObjectList == null)
+		{
+			Debug.LogError("Missing reference to active bubble object list.");
+			return true;
+		}
+
+		if (inactiveBubbleObjectList == null)
+		{
+			Debug.LogError("Missing reference to inactive bubble object list.");
+			return true;
+		}
+
+		if (levelDataMap == null)
+		{
+			Debug.LogError("Missing reference to level data map.");
+			return true;
+		}
+
+		if (levelMapDimension == null)
+		{
+			Debug.LogError("Missing reference to level map dimension.");
+			return true;
+		}
+
 		return false;
 	}
 
 	void LoadLevel()
 	{
 		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
+		levelMapDimension.RuntimeValue = new Vector3(levelInfo.columnCount, levelInfo.rowCount, 0);
+		activeBubbleObjectList.Contents = new List<GameObject>();
+		inactiveBubbleObjectList.Contents = new List<GameObject>();
+		levelDataMap.RuntimeContents = new List<int>();
 	}
 
 	void InstantiateBubblePool()
@@ -87,7 +107,7 @@ public class LevelGenerator : MonoBehaviour
 		{
 			GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
 			bubble.SetActive(false);
-			inactiveBubbleTargets.Add(bubble);
+			inactiveBubbleObjectList.Contents.Add(bubble);
 		}
 	}
 
@@ -106,16 +126,15 @@ public class LevelGenerator : MonoBehaviour
 
 		List<Row> rows = levelInfo.rows;
 		int rowCount = rows.Count;
-		int lastRowIdx = rowCount - 1;
 
 		// starting from bottom row (closest to player)
-		for (int rowIdx = lastRowIdx; rowIdx >= 0; --rowIdx)
+		for (int rowIdx = 0; rowIdx < rowCount; ++rowIdx)
 		{
 			List<int> columns = rows[rowIdx].columns;
 			int columnCount = columns.Count;
 
 			float offsetX = -(columnCount / 2) * bubbleSize.RuntimeValue.x;
-			float offsetY = (lastRowIdx - rowIdx) * bubbleSize.RuntimeValue.y;
+			float offsetY = rowIdx * bubbleSize.RuntimeValue.y;
 
 			// offset odd-indexed rows 
 			if (rowIdx % 2 > 0)
@@ -128,19 +147,21 @@ public class LevelGenerator : MonoBehaviour
 			// from left to right...
 			for (int columnIdx = 0; columnIdx < columnCount; ++columnIdx)
 			{
-				if (columns[columnIdx] == 0)
+				int levelTileValue = columns[columnIdx];
+				levelDataMap.RuntimeContents.Add(levelTileValue);
+
+				if (levelTileValue == 0)
 				{
 					// skip position; keeping a blank space
 					continue;
 				}
 
-				GameObject bubbleObject = inactiveBubbleTargets[0];
-				activeBubbleTargets.Add(bubbleObject);
-				inactiveBubbleTargets.RemoveAt(0);
+				GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
+				activeBubbleObjectList.Contents.Add(bubbleObject);
+				inactiveBubbleObjectList.Contents.RemoveAt(0);
 
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 				bubbleObject.transform.localPosition = bubblePosition;
-				bubbleObject.SetActive(true);
 
 				Bubble bubble = bubbleObject.GetComponent<Bubble>();
 				if (bubble == null)
@@ -149,9 +170,16 @@ public class LevelGenerator : MonoBehaviour
 					continue;
 				}
 
+				bubble.Type = (BubbleType)levelTileValue;
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
+				bubbleObject.SetActive(true);
 			}
 		}
 	}
+	#endregion
+
+	#region Public Methods
+
+
 	#endregion
 }

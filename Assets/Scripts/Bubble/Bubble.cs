@@ -3,6 +3,7 @@
  * description: 
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,18 +11,23 @@ using UnityEngine;
 public class Bubble : MonoBehaviour
 {
 	#region Properties
-	public Vector2 Coordinates;
+	[NonSerialized] public Vector2 Coordinates;
+	[NonSerialized] public BubbleType Type;
 	#endregion
 
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
+	[Header("Settings")]
 	[SerializeField] private VectorVariable bubbleSize;
+	[SerializeField] private SpriteRenderer tintRenderer;
+	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
+
+	[Header("Collision")]
 	[SerializeField] private VectorVariable bulletPosition;
 	[SerializeField] private VectorVariable bulletHitPosition;
 	[SerializeField] private VectorVariable bubbleHitCoordinates;
-	[SerializeField] private SpriteRenderer tintRenderer;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBulletHit;
@@ -30,15 +36,36 @@ public class Bubble : MonoBehaviour
 	private bool shouldTriggerBulletHit = true;
 	#endregion
 
-	void Start()
+	void OnEnable()
 	{
 		if (HasMissingReference())
 		{
 			return;
 		}
 
-		// TODO: buble info setup
-		// - match type, color, ...
+		if (Type == BubbleType.None)
+		{
+			gameObject.SetActive(false);
+			return;
+		}
+
+		bool hasValidType = false;
+		foreach (BubbleTypeInfo bubbleTypeInfo in bubbleTypeInfoList.Contents)
+		{
+			hasValidType = Type == bubbleTypeInfo.MatchType;
+
+			if (hasValidType)
+			{
+				tintRenderer.color = bubbleTypeInfo.InitColorValue;
+				break;
+			}
+		}
+
+		if (!hasValidType)
+		{
+			Debug.LogError("Unknown bubble type: " + Type);
+			gameObject.SetActive(false);
+		}
 	}
 
 	#region Private Methods
@@ -74,6 +101,12 @@ public class Bubble : MonoBehaviour
 			return true;
 		}
 
+		if (bubbleTypeInfoList == null)
+		{
+			Debug.LogError("Missing reference to bubble type list object.");
+			return true;
+		}
+
 		return false;
 	}
 	#endregion
@@ -102,9 +135,6 @@ public class Bubble : MonoBehaviour
 
 		bulletHitPosition.RuntimeValue = bulletPosition.RuntimeValue;
 		bubbleHitCoordinates.RuntimeValue = new Vector3(Coordinates.x, Coordinates.y, 0);
-
-		// Debug.Log("hit coords: " + bubbleHitCoordinates.RuntimeValue);
-		// tintRenderer.color = Color.yellow;
 
 		if (onBulletHit != null)
 		{
