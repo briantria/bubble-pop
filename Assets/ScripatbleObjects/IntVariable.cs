@@ -6,7 +6,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewFloatVariable", menuName = "ScriptableObject/Data/Int Variable", order = 51)]
+[CreateAssetMenu(fileName = "NewFloatVariable", menuName = "ScriptableObject/Variables/Int", order = 51)]
 public class IntVariable : ScriptableObject
 {
 	#region Properties

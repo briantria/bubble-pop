@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewFloatVariable", menuName = "ScriptableObject/Data/Float Variable", order = 51)]
+[CreateAssetMenu(fileName = "NewFloatVariable", menuName = "ScriptableObject/Variables/Float", order = 51)]
 public class FloatVariable : ScriptableObject
 {
 	#region Properties

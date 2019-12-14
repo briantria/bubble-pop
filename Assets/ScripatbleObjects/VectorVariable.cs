@@ -6,7 +6,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewVectorVariable", menuName = "ScriptableObject/Data/Vector Variable", order = 51)]
+[CreateAssetMenu(fileName = "NewVectorVariable", menuName = "ScriptableObject/Variables/Vector", order = 51)]
 public class VectorVariable : ScriptableObject
 {
 	#region Properties
