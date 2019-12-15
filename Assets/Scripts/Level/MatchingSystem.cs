@@ -103,22 +103,12 @@ public class MatchingSystem : MonoBehaviour
 	}
 	#endregion
 
-	// TODO: modular implementation
-	public void PopMatchedBubbles()
+	#region Private Methods
+	private List<Vector2> getBlankNeighborCoordinates()
 	{
-		if (HasMissingReference())
-		{
-			return;
-		}
-
-		// (1) find bullet attach point
 		List<Vector2> blankNeighborCoordinates = new List<Vector2>();
 		Vector2 hitCoordinates = bubbleHitCoordinates.RuntimeValue;
 		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
-		int levelMapRowCount = (int)levelMapDimension.RuntimeValue.y;
-
-		// Debug.Log("map dimension: " + levelMapDimension.RuntimeValue);
-		// Debug.Log("hit coord: " + hitCoordinates);
 
 		int neighborOffsetType = (int)hitCoordinates.y % 2;
 		int neighborOffsetPairCount = neighborOffsetArray.GetLength(1);
@@ -128,31 +118,31 @@ public class MatchingSystem : MonoBehaviour
 			int neighborX = (int)hitCoordinates.x + neighborOffsetArray[neighborOffsetType, pairIdx, 0];
 			int neighborY = (int)hitCoordinates.y + neighborOffsetArray[neighborOffsetType, pairIdx, 1];
 			int neighborIdx = (neighborY * levelMapColumnCount) + (neighborX % levelMapColumnCount);
-			// Debug.Log("(" + neighborX + "," + neighborY + ")" + " => " + neighborIdx);
 
 			if (neighborIdx < 0 || neighborIdx >= levelDataMap.RuntimeContents.Count)
 			{
-				// Debug.Log("<b>adjust for</b>: (" + neighborX + ", " + neighborY + ")");
 				continue;
 			}
 
 			if (levelDataMap.RuntimeContents[neighborIdx] == 0)
 			{
-				// Debug.Log("<b>add</b>: (" + neighborX + ", " + neighborY + ")");
 				blankNeighborCoordinates.Add(new Vector2(neighborX, neighborY));
 			}
-			// else
-			// {
-			// 	Debug.Log("<b>skip</b>: (" + neighborX + ", " + neighborY + ")");
-			// }
 		}
 
+		return blankNeighborCoordinates;
+	}
+
+	private Vector3 getAttachPosition(ref Vector2 attachCoordinates)
+	{
+		List<Vector2> blankNeighborCoordinates = getBlankNeighborCoordinates();
 		Vector3 hitPosition = bulletHitPosition.RuntimeValue;
 		Vector2 hitPostion2D = new Vector2(hitPosition.x, hitPosition.y);
-		Vector2 attachCoordinate = Vector2.zero;
 		Vector3 attachPosition = Vector3.zero;
 
+		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
 		float closestDistance = float.MaxValue;
+
 		foreach (Vector2 blankCoordinate in blankNeighborCoordinates)
 		{
 			// TODO: create a utility function
@@ -175,15 +165,21 @@ public class MatchingSystem : MonoBehaviour
 			{
 				attachPosition.x = positionX;
 				attachPosition.y = positionY;
-				attachCoordinate = blankCoordinate;
+				attachCoordinates = blankCoordinate;
 				closestDistance = distance;
 			}
 		}
 
-		// for debugging
-		//attachPosition = hitPosition;
+		return attachPosition;
+	}
 
+	private Bubble attachBubbleBullet()
+	{
+		List<Vector2> blankNeighborCoordinates = getBlankNeighborCoordinates();
+		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
 
+		Vector2 attachCoordinates = Vector2.zero;
+		Vector3 attachPosition = getAttachPosition(ref attachCoordinates);
 		GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
 
 		Bubble bubble = bubbleObject.GetComponent<Bubble>();
@@ -193,16 +189,26 @@ public class MatchingSystem : MonoBehaviour
 			activeBubbleObjectList.Contents.Add(bubbleObject);
 
 			bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
-			bubble.Coordinates = attachCoordinate;
+			bubble.Coordinates = attachCoordinates;
 
 			bubbleObject.transform.localPosition = attachPosition;
 			bubbleObject.SetActive(true);
-			Debug.Log("attach position: " + attachPosition);
 		}
-		else
+
+		return bubble;
+	}
+	#endregion
+
+	public void PopMatchedBubbles()
+	{
+		if (HasMissingReference())
 		{
-			Debug.LogError("Missing bubble component.");
+			return;
 		}
+
+		// (1) find bullet attach point
+		Bubble bubble = attachBubbleBullet();
+
 
 		// (2) check for matching bubbles; bullet as root node
 		// (3) pop if match count is valid
