@@ -181,6 +181,7 @@ MonoBehaviour:
     type: 2}
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
   bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
+  bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bulletPosition: {fileID: 11400000, guid: 5be531a338a390e4c9bdee4dbfe4189a, type: 2}
   activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,

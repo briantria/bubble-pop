@@ -17,6 +17,7 @@ public class GameSetup : MonoBehaviour
 
 	[Header("References")]
 	[SerializeField] private SpriteRenderer bubbleSpriteRenderer;
+	[SerializeField] private SpriteRenderer borderSpriteRenderer;
 
 	[Header("Game Perimeter")]
 	[SerializeField] private VectorVariable bottomLeftPerimeterPoint;
@@ -37,16 +38,17 @@ public class GameSetup : MonoBehaviour
 
 	void InstantiateGameBounds()
 	{
-		Vector3 bottomLeftScreenCoordinates = new Vector3(0, 0, 0);
-		Vector3 topRightScreenCoordinates = new Vector3(Screen.width, Screen.height, 0);
+		Vector3 borderRendererSize = borderSpriteRenderer.bounds.size;
+		float halfBorderWidth = borderRendererSize.x * 0.5f;
+		float halfBorderHeight = borderRendererSize.y * 0.5f;
 
-		bottomLeftPerimeterPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(bottomLeftScreenCoordinates);
-		topRightPerimeterPoint.RuntimeValue = Camera.main.ScreenToWorldPoint(topRightScreenCoordinates);
+		bottomLeftPerimeterPoint.RuntimeValue = new Vector3(-halfBorderWidth, -halfBorderHeight, 0);
+		topRightPerimeterPoint.RuntimeValue = new Vector3(halfBorderWidth, halfBorderHeight, 0);
 	}
 
 	void InstantiateBubbleSize()
 	{
-		bubbleSize.RuntimeValue = bubbleSpriteRenderer.sprite.bounds.size;
+		bubbleSize.RuntimeValue = bubbleSpriteRenderer.bounds.size;
 	}
 
 	bool HasMissingReference()
@@ -54,6 +56,12 @@ public class GameSetup : MonoBehaviour
 		if (bubbleSize == null)
 		{
 			Debug.LogError("Missing reference to bubble size.");
+			return true;
+		}
+
+		if (borderSpriteRenderer == null)
+		{
+			Debug.LogError("Missing reference to border sprite renderer.");
 			return true;
 		}
 
