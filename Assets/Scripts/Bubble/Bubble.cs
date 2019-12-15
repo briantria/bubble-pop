@@ -125,10 +125,10 @@ public class Bubble : MonoBehaviour
 		Vector3 currBulletPosition = bulletPosition.RuntimeValue;
 		currBulletPosition.z = 0;
 
-		float sqrBulletDistance = (currPosition - currBulletPosition).sqrMagnitude;
-		float collisionTreshold = bubbleSize.RuntimeValue.x + 0.1f;
+		float distance = Vector3.Distance(currPosition, currBulletPosition);
+		float collisionTreshold = bubbleSize.RuntimeValue.x * 0.7f;
 
-		if (sqrBulletDistance > collisionTreshold)
+		if (distance > collisionTreshold)
 		{
 			return;
 		}

@@ -27,6 +27,7 @@ public class Bullet : MonoBehaviour
 	[Header("References")]
 	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
+	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private VectorVariable bulletPosition;
 	[SerializeField] private GameObjectList activeBubbleObjectList;
@@ -40,7 +41,6 @@ public class Bullet : MonoBehaviour
 	private bool shouldMove = false;
 	private Vector3 initialPosition;
 	private Vector3 currDirection;
-	private Vector2 dimensions = Vector2.zero;
 	#endregion
 
 	#region LifeCycle
@@ -51,16 +51,7 @@ public class Bullet : MonoBehaviour
 			return;
 		}
 
-		SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-
-		if (spriteRenderer == null)
-		{
-			Debug.LogError("Missing sprite renderer component.");
-			return;
-		}
-
 		initialPosition = transform.position;
-		dimensions = spriteRenderer.sprite.bounds.size;
 		Reload();
 	}
 
@@ -77,8 +68,8 @@ public class Bullet : MonoBehaviour
 		}
 
 		Vector3 currPosition = transform.position;
-		float halfHeight = dimensions.y * 0.5f;
-		float halfWidth = dimensions.x * 0.5f;
+		float halfHeight = bubbleSize.RuntimeValue.y * 0.5f;
+		float halfWidth = bubbleSize.RuntimeValue.x * 0.5f;
 
 		// on reach top of game perimeter 
 		if (currPosition.y >= topRightPerimeterPoint.RuntimeValue.y - halfHeight)
@@ -99,7 +90,7 @@ public class Bullet : MonoBehaviour
 
 		Vector3 deltaPosition = currDirection * shootingSpeed.InitValue * Time.deltaTime;
 		currPosition += deltaPosition;
-		bulletPosition.RuntimeValue = currPosition;
+		bulletPosition.RuntimeValue = transform.localPosition;
 		transform.position = currPosition;
 
 		if (onUpdateBulletPosition != null)
@@ -127,6 +118,12 @@ public class Bullet : MonoBehaviour
 		if (topRightPerimeterPoint == null)
 		{
 			Debug.LogError("Missing reference to top right perimeter point.");
+			return true;
+		}
+
+		if (bubbleSize == null)
+		{
+			Debug.LogError("Missing reference to bubble size.");
 			return true;
 		}
 
