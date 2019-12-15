@@ -90,7 +90,7 @@ public class Bullet : MonoBehaviour
 
 		Vector3 deltaPosition = currDirection * shootingSpeed.InitValue * Time.deltaTime;
 		currPosition += deltaPosition;
-		bulletPosition.RuntimeValue = currPosition;
+		bulletPosition.RuntimeValue = transform.localPosition;
 		transform.position = currPosition;
 
 		if (onUpdateBulletPosition != null)

@@ -180,6 +180,10 @@ public class MatchingSystem : MonoBehaviour
 			}
 		}
 
+		// for debugging
+		//attachPosition = hitPosition;
+
+
 		GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
 
 		Bubble bubble = bubbleObject.GetComponent<Bubble>();
