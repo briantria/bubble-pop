@@ -94,6 +94,7 @@ public class MatchingSystem : MonoBehaviour
 	{
 		List<GameObject> neighbors = new List<GameObject>();
 
+		int rowCount = (int)levelMapDimension.RuntimeValue.y;
 		int columnCount = (int)levelMapDimension.RuntimeValue.x;
 		int rowOffsetType = (int)coordinates.y % 2;
 		int pairedOffsetCount = neighborOffsetArray.GetLength(1);
@@ -102,6 +103,13 @@ public class MatchingSystem : MonoBehaviour
 		{
 			int offsetX = (int)(coordinates.x + neighborOffsetArray[rowOffsetType, offsetIdx, 0]);
 			int offsetY = (int)(coordinates.y + neighborOffsetArray[rowOffsetType, offsetIdx, 1]);
+
+			if (offsetX < 0 || offsetX >= columnCount ||
+				offsetY < 0 || offsetY >= rowCount)
+			{
+				continue;
+			}
+
 			int idx = (offsetY * columnCount) + offsetX;
 
 			if (idx < 0 || idx >= bubbleTargetList.Contents.Count)
