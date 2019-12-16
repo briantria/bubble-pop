@@ -180,7 +180,6 @@ MonoBehaviour:
   topRightPerimeterPoint: {fileID: 11400000, guid: 9baf0a0e711cb524eb91f76de5b44e85,
     type: 2}
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
-  bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bulletPosition: {fileID: 11400000, guid: 5be531a338a390e4c9bdee4dbfe4189a, type: 2}
@@ -188,6 +187,8 @@ MonoBehaviour:
     type: 2}
   inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
     type: 2}
+  bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
+  bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
   onUpdateBulletPosition: {fileID: 11400000, guid: 768a83455719418419e1dfdbf3bc246f,
     type: 2}
   tintRenderer: {fileID: 4726725535000922533}

@@ -15,7 +15,7 @@ GameObject:
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -50,11 +50,7 @@ MonoBehaviour:
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   levelMapDimension: {fileID: 11400000, guid: 3c89ec5f0463fdf4091ca83f8072197e, type: 2}
-  levelDataMap: {fileID: 11400000, guid: 4cae1e667150b2f4994617fc2ee8c7a0, type: 2}
-  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
-    type: 2}
-  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
-    type: 2}
+  bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
 --- !u!114 &114428295685472130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,13 +68,14 @@ MonoBehaviour:
   levelDataMap: {fileID: 11400000, guid: 4cae1e667150b2f4994617fc2ee8c7a0, type: 2}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   levelMapDimension: {fileID: 11400000, guid: 3c89ec5f0463fdf4091ca83f8072197e, type: 2}
+  bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
+  bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
+    type: 2}
   activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
     type: 2}
   inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
     type: 2}
-  bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
-  bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
-    type: 2}
+  bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
   onBulletReload: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
 --- !u!114 &114532757438464926
 MonoBehaviour:

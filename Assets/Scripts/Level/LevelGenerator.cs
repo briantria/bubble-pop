@@ -11,27 +11,25 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-	#region Constants
-	const int TOTAL_BUBBLE_TARGET = 200;
-	#endregion
-
 	#region Member Variables
 	// known issue for SerializedField throwing warnings
 	// link: https://forum.unity.com/threads/serializefield-warnings.560878/
 #pragma warning disable 0649
 	[Header("References")]
 	[SerializeField] private GameObject bubblePrefab;
+	[Space]
 	[SerializeField] private IntVariable bubbleBulletType;
+	[Space]
 	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable levelMapDimension;
-	[SerializeField] private IntVariableList levelDataMap;
-	[SerializeField] private GameObjectList activeBubbleObjectList;
-	[SerializeField] private GameObjectList inactiveBubbleObjectList;
+	[Space]
+	[SerializeField] private GameObjectList bubbleTargetList;
 #pragma warning restore 0649
 
 	private LevelInfo levelInfo;
 	#endregion
 
+	#region LifeCycle
 	void Awake()
 	{
 		if (HasMissingReference())
@@ -43,6 +41,15 @@ public class LevelGenerator : MonoBehaviour
 		InstantiateBubblePool();
 		SetupLevel();
 	}
+
+	void OnDestroy()
+	{
+		if (bubbleTargetList != null)
+		{
+			bubbleTargetList.Contents = null;
+		}
+	}
+	#endregion
 
 	#region Private Methods
 	bool HasMissingReference()
@@ -65,21 +72,9 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
-		if (activeBubbleObjectList == null)
+		if (bubbleTargetList == null)
 		{
-			Debug.LogError("Missing reference to active bubble object list.");
-			return true;
-		}
-
-		if (inactiveBubbleObjectList == null)
-		{
-			Debug.LogError("Missing reference to inactive bubble object list.");
-			return true;
-		}
-
-		if (levelDataMap == null)
-		{
-			Debug.LogError("Missing reference to level data map.");
+			Debug.LogError("Missing reference to bubble target object list.");
 			return true;
 		}
 
@@ -96,18 +91,17 @@ public class LevelGenerator : MonoBehaviour
 	{
 		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
 		levelMapDimension.RuntimeValue = new Vector3(levelInfo.columnCount, levelInfo.rowCount, 0);
-		activeBubbleObjectList.Contents = new List<GameObject>();
-		inactiveBubbleObjectList.Contents = new List<GameObject>();
-		levelDataMap.RuntimeContents = new List<int>();
+		bubbleTargetList.Contents = new List<GameObject>();
 	}
 
 	void InstantiateBubblePool()
 	{
-		for (int idx = 0; idx < TOTAL_BUBBLE_TARGET; ++idx)
+		int maxBubbleCount = levelInfo.columnCount * levelInfo.rowCount;
+		for (int idx = 0; idx < maxBubbleCount; ++idx)
 		{
 			GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
 			bubble.SetActive(false);
-			inactiveBubbleObjectList.Contents.Add(bubble);
+			bubbleTargetList.Contents.Add(bubble);
 		}
 	}
 
@@ -125,16 +119,16 @@ public class LevelGenerator : MonoBehaviour
 		 */
 
 		List<Row> rows = levelInfo.rows;
-		int rowCount = rows.Count;
+		int rowCount = levelInfo.rowCount;
+		int columnCount = levelInfo.columnCount;
 
 		// starting from bottom row (closest to player)
 		for (int rowIdx = 0; rowIdx < rowCount; ++rowIdx)
 		{
 			List<int> columns = rows[rowIdx].columns;
-			int columnCount = columns.Count;
 
-			float offsetX = -(columnCount / 2) * bubbleSize.RuntimeValue.x;
-			float offsetY = rowIdx * bubbleSize.RuntimeValue.y;
+			float offsetX = bubbleSize.RuntimeValue.x * (-columnCount / 2);
+			float offsetY = bubbleSize.RuntimeValue.y * rowIdx;
 
 			// offset odd-indexed rows 
 			if (rowIdx % 2 > 0)
@@ -142,44 +136,39 @@ public class LevelGenerator : MonoBehaviour
 				offsetX += bubbleSize.RuntimeValue.x * 0.5f;
 			}
 
-			Vector3 bubblePosition = new Vector3(offsetX, offsetY, 0);
-
 			// from left to right...
 			for (int columnIdx = 0; columnIdx < columnCount; ++columnIdx)
 			{
-				int levelTileValue = columns[columnIdx];
-				levelDataMap.RuntimeContents.Add(levelTileValue);
+				int bubbleTypeIntValue = columns[columnIdx];
+				int bubbleTargetIdx = (rowIdx * columnCount) + columnIdx;
 
-				if (levelTileValue == 0)
+				if (bubbleTargetIdx < 0 || bubbleTargetIdx >= bubbleTargetList.Contents.Count)
 				{
-					// skip position; keeping a blank space
-					continue;
+					Debug.LogError("Invalid bubble target index: " + bubbleTargetIdx +
+					" (" + columnIdx + ", " + rowIdx + ")");
+					break;
 				}
 
-				GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
-				activeBubbleObjectList.Contents.Add(bubbleObject);
-				inactiveBubbleObjectList.Contents.RemoveAt(0);
-
-				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
-				bubbleObject.transform.localPosition = bubblePosition;
-
+				GameObject bubbleObject = bubbleTargetList.Contents[bubbleTargetIdx];
 				Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
 				if (bubble == null)
 				{
-					Debug.LogError("Missing bubble component.");
-					continue;
+					Debug.LogError("Missing bubble component. " + "(" + columnIdx + "," + rowIdx + ")");
+					break;
 				}
 
-				bubble.Type = (BubbleType)levelTileValue;
+				Vector3 bubblePosition = new Vector3(offsetX, offsetY, 0);
+				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
+
+				bubble.Type = (BubbleType)bubbleTypeIntValue;
+				bubble.Type = (BubbleType)bubbleTypeIntValue;
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
-				bubbleObject.SetActive(true);
+
+				bubbleObject.transform.localPosition = bubblePosition;
+				bubbleObject.SetActive(bubbleTypeIntValue != 0);
 			}
 		}
 	}
-	#endregion
-
-	#region Public Methods
-
-
 	#endregion
 }

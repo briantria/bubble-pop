@@ -26,12 +26,13 @@ public class Bullet : MonoBehaviour
 
 	[Header("References")]
 	[SerializeField] private IntVariable bubbleBulletType;
-	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
+	[Space]
 	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable targetPoint;
 	[SerializeField] private VectorVariable bulletPosition;
-	[SerializeField] private GameObjectList activeBubbleObjectList;
-	[SerializeField] private GameObjectList inactiveBubbleObjectList;
+	[Space]
+	[SerializeField] private GameObjectList bubbleTargetList;
+	[SerializeField] private BubbleTypeInfoList bubbleTypeInfoList;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onUpdateBulletPosition;
@@ -157,15 +158,9 @@ public class Bullet : MonoBehaviour
 			return true;
 		}
 
-		if (activeBubbleObjectList == null)
+		if (bubbleTargetList == null)
 		{
-			Debug.LogError("Missing reference to active bubble object list.");
-			return true;
-		}
-
-		if (inactiveBubbleObjectList == null)
-		{
-			Debug.LogError("Missing reference to inactive bubble object list.");
+			Debug.LogError("Missing reference to bubble target list.");
 			return true;
 		}
 
@@ -176,7 +171,7 @@ public class Bullet : MonoBehaviour
 	{
 		List<BubbleType> activeBubbleTypes = new List<BubbleType>();
 
-		foreach (GameObject bubbleObject in activeBubbleObjectList.Contents)
+		foreach (GameObject bubbleObject in bubbleTargetList.Contents)
 		{
 			Bubble bubble = bubbleObject.GetComponent<Bubble>();
 

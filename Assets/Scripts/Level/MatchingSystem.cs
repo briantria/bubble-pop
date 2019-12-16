@@ -17,13 +17,13 @@ public class MatchingSystem : MonoBehaviour
 	[Header("References")]
 	[SerializeField] private IntVariable bubbleBulletType;
 	[SerializeField] private IntVariable minimumMatchCount;
-	[SerializeField] private IntVariableList levelDataMap;
+	[Space]
 	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable levelMapDimension;
-	[SerializeField] private GameObjectList activeBubbleObjectList;
-	[SerializeField] private GameObjectList inactiveBubbleObjectList;
 	[SerializeField] private VectorVariable bulletHitPosition;
 	[SerializeField] private VectorVariable bubbleHitCoordinates;
+	[Space]
+	[SerializeField] private GameObjectList bubbleTargetList;
 
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBulletReload;
@@ -75,21 +75,9 @@ public class MatchingSystem : MonoBehaviour
 			return true;
 		}
 
-		if (activeBubbleObjectList == null)
+		if (bubbleTargetList == null)
 		{
 			Debug.LogError("Missing reference to active bubble object list.");
-			return true;
-		}
-
-		if (inactiveBubbleObjectList == null)
-		{
-			Debug.LogError("Missing reference to inactive bubble object list.");
-			return true;
-		}
-
-		if (levelDataMap == null)
-		{
-			Debug.LogError("Missing reference to level data map.");
 			return true;
 		}
 
@@ -119,12 +107,15 @@ public class MatchingSystem : MonoBehaviour
 			int neighborY = (int)hitCoordinates.y + neighborOffsetArray[neighborOffsetType, pairIdx, 1];
 			int neighborIdx = (neighborY * levelMapColumnCount) + (neighborX % levelMapColumnCount);
 
-			if (neighborIdx < 0 || neighborIdx >= levelDataMap.RuntimeContents.Count)
+			if (neighborIdx < 0 || neighborIdx >= bubbleTargetList.Contents.Count)
 			{
 				continue;
 			}
 
-			if (levelDataMap.RuntimeContents[neighborIdx] == 0)
+			GameObject bubbleObject = bubbleTargetList.Contents[neighborIdx];
+			Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
+			if (bubble.Type == 0)
 			{
 				blankNeighborCoordinates.Add(new Vector2(neighborX, neighborY));
 			}
@@ -180,23 +171,33 @@ public class MatchingSystem : MonoBehaviour
 
 		Vector2 attachCoordinates = Vector2.zero;
 		Vector3 attachPosition = getAttachPosition(ref attachCoordinates);
-		GameObject bubbleObject = inactiveBubbleObjectList.Contents[0];
+		int bubbleTargetIdx = (int)((attachCoordinates.y * levelMapColumnCount) + attachCoordinates.x);
 
-		Bubble bubble = bubbleObject.GetComponent<Bubble>();
-		if (bubble != null)
+		if (bubbleTargetIdx < 0 || bubbleTargetIdx >= bubbleTargetList.Contents.Count)
 		{
-			inactiveBubbleObjectList.Contents.RemoveAt(0);
-			activeBubbleObjectList.Contents.Add(bubbleObject);
-
-			bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
-			bubble.Coordinates = attachCoordinates;
-
-			bubbleObject.transform.localPosition = attachPosition;
-			bubbleObject.SetActive(true);
+			Debug.LogError("Invalid bubble target index: " + bubbleTargetIdx + " " + attachCoordinates);
+			return null;
 		}
+
+		GameObject bubbleObject = bubbleTargetList.Contents[bubbleTargetIdx];
+		Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
+		if (bubble == null)
+		{
+			Debug.LogError("Missing bubble component at " + attachCoordinates);
+			return null;
+		}
+
+		bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
+		bubble.Coordinates = attachCoordinates;
+
+		bubbleObject.transform.localPosition = attachPosition;
+		bubbleObject.SetActive(true);
 
 		return bubble;
 	}
+
+
 	#endregion
 
 	public void PopMatchedBubbles()
@@ -208,13 +209,15 @@ public class MatchingSystem : MonoBehaviour
 
 		// (1) find bullet attach point
 		Bubble bubble = attachBubbleBullet();
+		if (bubble == null)
+		{
+			return;
+		}
+
+		// TODO: (2) check for matching bubbles; bullet as root node
 
 
-		// (2) check for matching bubbles; bullet as root node
-		// (3) pop if match count is valid
-
-		// TODO: check matches
-		// TODO: loop to pop neighboring bubbles
+		// TODO: (3) pop if match count is valid
 
 		if (onBulletReload != null)
 		{
