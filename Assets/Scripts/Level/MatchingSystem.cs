@@ -183,7 +183,7 @@ public class MatchingSystem : MonoBehaviour
 	}
 
 	// reference: http://rembound.com/articles/bubble-shooter-game-tutorial-with-html5-and-javascript
-	private List<GameObject> getPopList(Bubble bubble)
+	private List<GameObject> getPopList(Bubble bubble, bool ignoreMatchType)
 	{
 		List<GameObject> popList = new List<GameObject>();
 		List<GameObject> pendingBubbleList = new List<GameObject>();
@@ -204,25 +204,72 @@ public class MatchingSystem : MonoBehaviour
 				break;
 			}
 
-			if (currentBubble.Type != bubble.Type)
+			if (ignoreMatchType || currentBubble.Type == bubble.Type)
 			{
-				continue;
-			}
+				popList.Add(currentBubbleObject);
+				List<GameObject> activeNeighbors = getNeighbors(currentBubble.Coordinates, NeighborType.Active);
 
-			popList.Add(currentBubbleObject);
-			List<GameObject> activeNeighbors = getNeighbors(currentBubble.Coordinates, NeighborType.Active);
-
-			foreach (GameObject neighbor in activeNeighbors)
-			{
-				if (!checkedList.Contains(neighbor))
+				foreach (GameObject neighbor in activeNeighbors)
 				{
-					pendingBubbleList.Add(neighbor);
-					checkedList.Add(neighbor);
+					if (!checkedList.Contains(neighbor))
+					{
+						pendingBubbleList.Add(neighbor);
+						checkedList.Add(neighbor);
+					}
 				}
 			}
 		}
 
 		return popList;
+	}
+
+	private List<GameObject> getFloatingPopList()
+	{
+		List<GameObject> floatingPopList = new List<GameObject>();
+		List<GameObject> checkedList = new List<GameObject>();
+
+		foreach (GameObject bubbleObject in bubbleTargetList.Contents)
+		{
+			if (checkedList.Contains(bubbleObject))
+			{
+				continue;
+			}
+
+			Bubble bubble = bubbleObject.GetComponent<Bubble>();
+
+			if (bubble == null)
+			{
+				Debug.LogError("Missing bubble component");
+				break;
+			}
+
+			List<GameObject> popList = getPopList(bubble, true);
+			checkedList.AddRange(popList);
+
+			if (popList.Count <= 0)
+			{
+				continue;
+			}
+
+			bool isFloating = true;
+
+			foreach (GameObject bubbleInCheck in popList)
+			{
+				bubble = bubbleInCheck.GetComponent<Bubble>();
+				if (bubble.Coordinates.y == levelMapDimension.RuntimeValue.y - 1)
+				{
+					isFloating = false;
+					break;
+				}
+			}
+
+			if (isFloating)
+			{
+				floatingPopList.AddRange(popList);
+			}
+		}
+
+		return floatingPopList;
 	}
 	#endregion
 
@@ -245,9 +292,8 @@ public class MatchingSystem : MonoBehaviour
 			return;
 		}
 
-		List<GameObject> popList = getPopList(bubble);
-
-		if (popList.Count >= 2)
+		List<GameObject> popList = getPopList(bubble, false);
+		if (popList.Count >= minimumMatchCount.InitValue)
 		{
 			foreach (GameObject matchedBubbleObject in popList)
 			{
@@ -263,8 +309,22 @@ public class MatchingSystem : MonoBehaviour
 			}
 		}
 
-		// TODO: animations
+		popList = getFloatingPopList();
+		foreach (GameObject floatingBubbleObject in popList)
+		{
+			Bubble floatingBubble = floatingBubbleObject.GetComponent<Bubble>();
+			if (floatingBubbleObject == null)
+			{
+				Debug.LogError("Missing bubble component.");
+				break;
+			}
 
+			floatingBubble.Type = BubbleType.None;
+			floatingBubbleObject.SetActive(false);
+		}
+
+
+		// TODO: animations
 
 		if (onBulletReload != null)
 		{
