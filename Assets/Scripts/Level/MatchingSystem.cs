@@ -90,9 +90,9 @@ public class MatchingSystem : MonoBehaviour
 		return false;
 	}
 
-	private List<GameObject> getInactiveNeighbors()
+	private List<GameObject> getNeighbors(NeighborType neighborType)
 	{
-		List<GameObject> inactiveNeighbors = new List<GameObject>();
+		List<GameObject> neighbors = new List<GameObject>();
 		Vector2 hitCoordinates = bubbleHitCoordinates.RuntimeValue;
 
 		Debug.Log("hit coord: " + hitCoordinates);
@@ -114,18 +114,38 @@ public class MatchingSystem : MonoBehaviour
 
 			GameObject bubbleObject = bubbleTargetList.Contents[idx];
 
-			if (!bubbleObject.activeInHierarchy)
+			switch (neighborType)
 			{
-				inactiveNeighbors.Add(bubbleObject);
+				case NeighborType.Inactive:
+					{
+						if (!bubbleObject.activeInHierarchy)
+						{
+							neighbors.Add(bubbleObject);
+						}
+						continue;
+					}
+				case NeighborType.Active:
+					{
+						if (bubbleObject.activeInHierarchy)
+						{
+							neighbors.Add(bubbleObject);
+						}
+						continue;
+					}
+				default:
+					{
+						neighbors.Add(bubbleObject);
+						continue;
+					}
 			}
 		}
 
-		return inactiveNeighbors;
+		return neighbors;
 	}
 
 	private Bubble attachBubbleBullet()
 	{
-		List<GameObject> inactiveNeighbors = getInactiveNeighbors();
+		List<GameObject> inactiveNeighbors = getNeighbors(NeighborType.Inactive);
 		GameObject bubbleObject = null;
 
 		foreach (GameObject neighbor in inactiveNeighbors)
