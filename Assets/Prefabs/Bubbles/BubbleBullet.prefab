@@ -183,13 +183,9 @@ MonoBehaviour:
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bulletPosition: {fileID: 11400000, guid: 5be531a338a390e4c9bdee4dbfe4189a, type: 2}
-  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
-    type: 2}
-  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
-    type: 2}
   bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
   bubbleTypeInfoList: {fileID: 11400000, guid: 8b3e6e990d2091e4e9936ebe2e0e9195, type: 2}
-  onUpdateBulletPosition: {fileID: 11400000, guid: 768a83455719418419e1dfdbf3bc246f,
+  onUpdateBulletPosition: {fileID: 11400000, guid: 7c5698e6cfbcec34e84993c90a1fcced,
     type: 2}
   tintRenderer: {fileID: 4726725535000922533}
 --- !u!114 &114323574533406292
@@ -204,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 4ee2f4ae98ee6ce4ba1475f1df681b80, type: 2}
+  gameEvent: {fileID: 11400000, guid: 28cb91f7a88e345438c7cc58456385bb, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -231,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
+  gameEvent: {fileID: 11400000, guid: 066f97c4e9df7be419c72e1582aad9ef, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:

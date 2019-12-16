@@ -182,7 +182,7 @@ MonoBehaviour:
   bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
   bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
     type: 2}
-  onBulletHit: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
+  onBulletHit: {fileID: 11400000, guid: bad060f9678e3fa499e4f9c564da6640, type: 2}
 --- !u!114 &114961365927649364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 4ee2f4ae98ee6ce4ba1475f1df681b80, type: 2}
+  gameEvent: {fileID: 11400000, guid: 28cb91f7a88e345438c7cc58456385bb, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 768a83455719418419e1dfdbf3bc246f, type: 2}
+  gameEvent: {fileID: 11400000, guid: 7c5698e6cfbcec34e84993c90a1fcced, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
+  gameEvent: {fileID: 11400000, guid: bad060f9678e3fa499e4f9c564da6640, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:

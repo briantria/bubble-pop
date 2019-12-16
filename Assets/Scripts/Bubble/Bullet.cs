@@ -194,8 +194,12 @@ public class Bullet : MonoBehaviour
 			}
 		}
 
+		bubbleBulletType.RuntimeValue = 1;
 		int randomIdx = Random.Range(0, activeBubbleTypes.Count);
-		bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
+		if (randomIdx >= 0 && randomIdx < activeBubbleTypes.Count)
+		{
+			bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
+		}
 	}
 	#endregion
 

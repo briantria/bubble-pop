@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e1598a450080b408a7be26d64786c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBubbleShoot: {fileID: 11400000, guid: 4ee2f4ae98ee6ce4ba1475f1df681b80, type: 2}
+  onBubbleShoot: {fileID: 11400000, guid: 28cb91f7a88e345438c7cc58456385bb, type: 2}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
   bubbleBulletPrefab: {fileID: 4726725535379041231, guid: 88b2144d8344056438fa80eeae1495a4,
@@ -66,10 +66,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 11400000, guid: 09ae4421ef8e0024e933cafaf78c9d93, type: 2}
-  onStartAim: {fileID: 11400000, guid: 32219c4bb53c6c545866ad9e205a60ad, type: 2}
-  onUpdateAimDirection: {fileID: 11400000, guid: f5a7d8ad329ed7b4cbda40fb17a820df,
+  onStartAim: {fileID: 11400000, guid: 4c4235001d9a74345bcf2f2617baa064, type: 2}
+  onUpdateAimDirection: {fileID: 11400000, guid: 8278077e62e776241872c7dc6479dfa5,
     type: 2}
-  onAttemptBubbleShoot: {fileID: 11400000, guid: 4314098ef4a313e4d90af16f2ddb20d7,
+  onAttemptBubbleShoot: {fileID: 11400000, guid: 2b7393bd4ad02a649acbe92a62affecd,
     type: 2}
 --- !u!114 &114620517871844018
 MonoBehaviour:
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 32219c4bb53c6c545866ad9e205a60ad, type: 2}
+  gameEvent: {fileID: 11400000, guid: 4c4235001d9a74345bcf2f2617baa064, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 4314098ef4a313e4d90af16f2ddb20d7, type: 2}
+  gameEvent: {fileID: 11400000, guid: 2b7393bd4ad02a649acbe92a62affecd, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
