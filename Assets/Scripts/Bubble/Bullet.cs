@@ -182,6 +182,12 @@ public class Bullet : MonoBehaviour
 			}
 
 			BubbleType bubbleType = bubble.Type;
+
+			if (bubbleType == BubbleType.None)
+			{
+				continue;
+			}
+
 			if (!activeBubbleTypes.Contains(bubbleType))
 			{
 				activeBubbleTypes.Add(bubbleType);
