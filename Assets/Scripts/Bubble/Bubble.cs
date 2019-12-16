@@ -136,9 +136,6 @@ public class Bubble : MonoBehaviour
 		bulletHitPosition.RuntimeValue = bulletPosition.RuntimeValue;
 		bubbleHitCoordinates.RuntimeValue = new Vector3(Coordinates.x, Coordinates.y, 0);
 
-		Debug.Log("bubble pos: " + transform.position);
-		Debug.Log("bubble coord: " + bubbleHitCoordinates.RuntimeValue);
-
 		if (onBulletHit != null)
 		{
 			onBulletHit.Raise();

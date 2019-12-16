@@ -90,21 +90,18 @@ public class MatchingSystem : MonoBehaviour
 		return false;
 	}
 
-	private List<GameObject> getNeighbors(NeighborType neighborType)
+	private List<GameObject> getNeighbors(Vector2 coordinates, NeighborType neighborType)
 	{
 		List<GameObject> neighbors = new List<GameObject>();
-		Vector2 hitCoordinates = bubbleHitCoordinates.RuntimeValue;
-
-		Debug.Log("hit coord: " + hitCoordinates);
 
 		int columnCount = (int)levelMapDimension.RuntimeValue.x;
-		int rowOffsetType = (int)hitCoordinates.y % 2;
+		int rowOffsetType = (int)coordinates.y % 2;
 		int pairedOffsetCount = neighborOffsetArray.GetLength(1);
 
 		for (int offsetIdx = 0; offsetIdx < pairedOffsetCount; ++offsetIdx)
 		{
-			int offsetX = (int)(hitCoordinates.x + neighborOffsetArray[rowOffsetType, offsetIdx, 0]);
-			int offsetY = (int)(hitCoordinates.y + neighborOffsetArray[rowOffsetType, offsetIdx, 1]);
+			int offsetX = (int)(coordinates.x + neighborOffsetArray[rowOffsetType, offsetIdx, 0]);
+			int offsetY = (int)(coordinates.y + neighborOffsetArray[rowOffsetType, offsetIdx, 1]);
 			int idx = (offsetY * columnCount) + offsetX;
 
 			if (idx < 0 || idx >= bubbleTargetList.Contents.Count)
@@ -145,7 +142,7 @@ public class MatchingSystem : MonoBehaviour
 
 	private Bubble attachBubbleBullet()
 	{
-		List<GameObject> inactiveNeighbors = getNeighbors(NeighborType.Inactive);
+		List<GameObject> inactiveNeighbors = getNeighbors(bubbleHitCoordinates.RuntimeValue, NeighborType.Inactive);
 		GameObject bubbleObject = null;
 
 		foreach (GameObject neighbor in inactiveNeighbors)
@@ -171,14 +168,53 @@ public class MatchingSystem : MonoBehaviour
 			return null;
 		}
 
-		Debug.Log("<b>hit pos</b>: " + bulletHitPosition.RuntimeValue);
-		Debug.Log("pos: " + bubbleObject.transform.position);
-		Debug.Log("coord: " + bubble.Coordinates);
-
 		bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
 		bubbleObject.SetActive(true);
 
 		return bubble;
+	}
+
+	// reference: http://rembound.com/articles/bubble-shooter-game-tutorial-with-html5-and-javascript
+	private List<GameObject> getPopList(Bubble bubble)
+	{
+		List<GameObject> popList = new List<GameObject>();
+		List<GameObject> pendingBubbleList = new List<GameObject>();
+		List<GameObject> checkedList = new List<GameObject>();
+
+		pendingBubbleList.Add(bubble.gameObject);
+		checkedList.Add(bubble.gameObject);
+
+		while (pendingBubbleList.Count > 0)
+		{
+			GameObject currentBubbleObject = pendingBubbleList[0];
+			Bubble currentBubble = currentBubbleObject.GetComponent<Bubble>();
+			pendingBubbleList.RemoveAt(0);
+
+			if (currentBubble == null)
+			{
+				Debug.LogError("Missing bubble component.");
+				break;
+			}
+
+			if (currentBubble.Type != bubble.Type)
+			{
+				continue;
+			}
+
+			popList.Add(currentBubbleObject);
+			List<GameObject> activeNeighbors = getNeighbors(currentBubble.Coordinates, NeighborType.Active);
+
+			foreach (GameObject neighbor in activeNeighbors)
+			{
+				if (!checkedList.Contains(neighbor))
+				{
+					pendingBubbleList.Add(neighbor);
+					checkedList.Add(neighbor);
+				}
+			}
+		}
+
+		return popList;
 	}
 	#endregion
 
@@ -189,22 +225,43 @@ public class MatchingSystem : MonoBehaviour
 			return;
 		}
 
-		// (1) find bullet attach point
 		Bubble bubble = attachBubbleBullet();
+
+		if (bubble == null)
+		{
+			if (onBulletReload != null)
+			{
+				onBulletReload.Raise();
+			}
+
+			return;
+		}
+
+		List<GameObject> popList = getPopList(bubble);
+
+		if (popList.Count >= 2)
+		{
+			foreach (GameObject matchedBubbleObject in popList)
+			{
+				Bubble matchedBubble = matchedBubbleObject.GetComponent<Bubble>();
+				if (matchedBubbleObject == null)
+				{
+					Debug.LogError("Missing bubble component.");
+					break;
+				}
+
+				matchedBubble.Type = BubbleType.None;
+				matchedBubbleObject.SetActive(false);
+			}
+		}
+
+		// TODO: animations
+
 
 		if (onBulletReload != null)
 		{
 			onBulletReload.Raise();
 		}
 
-		if (bubble == null)
-		{
-			return;
-		}
-
-		// TODO: (2) check for matching bubbles; bullet as root node
-
-
-		// TODO: (3) pop if match count is valid
 	}
 }
