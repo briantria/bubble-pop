@@ -89,115 +89,77 @@ public class MatchingSystem : MonoBehaviour
 
 		return false;
 	}
-	#endregion
 
-	#region Private Methods
-	private List<Vector2> getBlankNeighborCoordinates()
+	private List<GameObject> getInactiveNeighbors()
 	{
-		List<Vector2> blankNeighborCoordinates = new List<Vector2>();
+		List<GameObject> inactiveNeighbors = new List<GameObject>();
 		Vector2 hitCoordinates = bubbleHitCoordinates.RuntimeValue;
-		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
 
-		int neighborOffsetType = (int)hitCoordinates.y % 2;
-		int neighborOffsetPairCount = neighborOffsetArray.GetLength(1);
+		Debug.Log("hit coord: " + hitCoordinates);
 
-		for (int pairIdx = 0; pairIdx < neighborOffsetPairCount; ++pairIdx)
+		int columnCount = (int)levelMapDimension.RuntimeValue.x;
+		int rowOffsetType = (int)hitCoordinates.y % 2;
+		int pairedOffsetCount = neighborOffsetArray.GetLength(1);
+
+		for (int offsetIdx = 0; offsetIdx < pairedOffsetCount; ++offsetIdx)
 		{
-			int neighborX = (int)hitCoordinates.x + neighborOffsetArray[neighborOffsetType, pairIdx, 0];
-			int neighborY = (int)hitCoordinates.y + neighborOffsetArray[neighborOffsetType, pairIdx, 1];
-			int neighborIdx = (neighborY * levelMapColumnCount) + (neighborX % levelMapColumnCount);
+			int offsetX = (int)(hitCoordinates.x + neighborOffsetArray[rowOffsetType, offsetIdx, 0]);
+			int offsetY = (int)(hitCoordinates.y + neighborOffsetArray[rowOffsetType, offsetIdx, 1]);
+			int idx = (offsetY * columnCount) + offsetX;
 
-			if (neighborIdx < 0 || neighborIdx >= bubbleTargetList.Contents.Count)
+			if (idx < 0 || idx >= bubbleTargetList.Contents.Count)
 			{
 				continue;
 			}
 
-			GameObject bubbleObject = bubbleTargetList.Contents[neighborIdx];
-			Bubble bubble = bubbleObject.GetComponent<Bubble>();
+			GameObject bubbleObject = bubbleTargetList.Contents[idx];
 
-			if (bubble.Type == 0)
+			if (!bubbleObject.activeInHierarchy)
 			{
-				blankNeighborCoordinates.Add(new Vector2(neighborX, neighborY));
+				inactiveNeighbors.Add(bubbleObject);
 			}
 		}
 
-		return blankNeighborCoordinates;
-	}
-
-	private Vector3 getAttachPosition(ref Vector2 attachCoordinates)
-	{
-		List<Vector2> blankNeighborCoordinates = getBlankNeighborCoordinates();
-		Vector3 hitPosition = bulletHitPosition.RuntimeValue;
-		Vector2 hitPostion2D = new Vector2(hitPosition.x, hitPosition.y);
-		Vector3 attachPosition = Vector3.zero;
-
-		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
-		float closestDistance = float.MaxValue;
-
-		foreach (Vector2 blankCoordinate in blankNeighborCoordinates)
-		{
-			// TODO: create a utility function
-			float positionY = blankCoordinate.y * bubbleSize.RuntimeValue.y;
-			float positionX = -(levelMapColumnCount / 2) * bubbleSize.RuntimeValue.x;
-			positionX += bubbleSize.RuntimeValue.x * blankCoordinate.x;
-
-			// offset odd-indexed rows 
-			if ((int)blankCoordinate.y % 2 > 0)
-			{
-				positionX += bubbleSize.RuntimeValue.x * 0.5f;
-			}
-
-			Vector2 blankPosition = new Vector2(positionX, positionY);
-			// Debug.Log("blank position: " + blankPosition);
-
-			float distance = Vector2.Distance(hitPostion2D, blankPosition);
-
-			if (distance < closestDistance)
-			{
-				attachPosition.x = positionX;
-				attachPosition.y = positionY;
-				attachCoordinates = blankCoordinate;
-				closestDistance = distance;
-			}
-		}
-
-		return attachPosition;
+		return inactiveNeighbors;
 	}
 
 	private Bubble attachBubbleBullet()
 	{
-		List<Vector2> blankNeighborCoordinates = getBlankNeighborCoordinates();
-		int levelMapColumnCount = (int)levelMapDimension.RuntimeValue.x;
+		List<GameObject> inactiveNeighbors = getInactiveNeighbors();
+		GameObject bubbleObject = null;
 
-		Vector2 attachCoordinates = Vector2.zero;
-		Vector3 attachPosition = getAttachPosition(ref attachCoordinates);
-		int bubbleTargetIdx = (int)((attachCoordinates.y * levelMapColumnCount) + attachCoordinates.x);
-
-		if (bubbleTargetIdx < 0 || bubbleTargetIdx >= bubbleTargetList.Contents.Count)
+		foreach (GameObject neighbor in inactiveNeighbors)
 		{
-			Debug.LogError("Invalid bubble target index: " + bubbleTargetIdx + " " + attachCoordinates);
+			float distance = Vector3.Distance(neighbor.transform.position, bulletHitPosition.RuntimeValue);
+			if (distance < bubbleSize.RuntimeValue.x)
+			{
+				bubbleObject = neighbor;
+				break;
+			}
+		}
+
+		if (bubbleObject == null)
+		{
 			return null;
 		}
 
-		GameObject bubbleObject = bubbleTargetList.Contents[bubbleTargetIdx];
 		Bubble bubble = bubbleObject.GetComponent<Bubble>();
 
 		if (bubble == null)
 		{
-			Debug.LogError("Missing bubble component at " + attachCoordinates);
+			Debug.LogError("Missing bubble component");
 			return null;
 		}
 
-		bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
-		bubble.Coordinates = attachCoordinates;
+		Debug.Log("<b>hit pos</b>: " + bulletHitPosition.RuntimeValue);
+		Debug.Log("pos: " + bubbleObject.transform.position);
+		Debug.Log("coord: " + bubble.Coordinates);
 
-		bubbleObject.transform.localPosition = attachPosition;
+		bubble.Type = (BubbleType)bubbleBulletType.RuntimeValue;
 		bubbleObject.SetActive(true);
 
 		return bubble;
 	}
-
-
 	#endregion
 
 	public void PopMatchedBubbles()
@@ -209,6 +171,12 @@ public class MatchingSystem : MonoBehaviour
 
 		// (1) find bullet attach point
 		Bubble bubble = attachBubbleBullet();
+
+		if (onBulletReload != null)
+		{
+			onBulletReload.Raise();
+		}
+
 		if (bubble == null)
 		{
 			return;
@@ -218,10 +186,5 @@ public class MatchingSystem : MonoBehaviour
 
 
 		// TODO: (3) pop if match count is valid
-
-		if (onBulletReload != null)
-		{
-			onBulletReload.Raise();
-		}
 	}
 }

@@ -126,7 +126,7 @@ public class Bubble : MonoBehaviour
 		currBulletPosition.z = 0;
 
 		float distance = Vector3.Distance(currPosition, currBulletPosition);
-		float collisionTreshold = bubbleSize.RuntimeValue.x * 0.7f;
+		float collisionTreshold = bubbleSize.RuntimeValue.x * 1.2f;
 
 		if (distance > collisionTreshold)
 		{
@@ -135,6 +135,9 @@ public class Bubble : MonoBehaviour
 
 		bulletHitPosition.RuntimeValue = bulletPosition.RuntimeValue;
 		bubbleHitCoordinates.RuntimeValue = new Vector3(Coordinates.x, Coordinates.y, 0);
+
+		Debug.Log("bubble pos: " + transform.position);
+		Debug.Log("bubble coord: " + bubbleHitCoordinates.RuntimeValue);
 
 		if (onBulletHit != null)
 		{

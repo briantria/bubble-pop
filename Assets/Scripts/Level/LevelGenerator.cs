@@ -162,10 +162,10 @@ public class LevelGenerator : MonoBehaviour
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 
 				bubble.Type = (BubbleType)bubbleTypeIntValue;
-				bubble.Type = (BubbleType)bubbleTypeIntValue;
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
 
 				bubbleObject.transform.localPosition = bubblePosition;
+
 				bubbleObject.SetActive(bubbleTypeIntValue != 0);
 			}
 		}
