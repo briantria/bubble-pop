@@ -90,13 +90,13 @@ public class LevelGenerator : MonoBehaviour
 	void LoadLevel()
 	{
 		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
-		levelMapDimension.RuntimeValue = new Vector3(levelInfo.columnCount, levelInfo.rowCount, 0);
+		levelMapDimension.RuntimeValue = new Vector3(levelInfo.ColumnCount, levelInfo.RowCount, 0);
 		bubbleTargetList.Contents = new List<GameObject>();
 	}
 
 	void InstantiateBubblePool()
 	{
-		int maxBubbleCount = levelInfo.columnCount * levelInfo.rowCount;
+		int maxBubbleCount = levelInfo.ColumnCount * levelInfo.RowCount;
 		for (int idx = 0; idx < maxBubbleCount; ++idx)
 		{
 			GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
@@ -118,14 +118,14 @@ public class LevelGenerator : MonoBehaviour
 		 * 		- 1, 2, 3, ... n -> bubble with given type (color, powerup, etc...)
 		 */
 
-		List<Row> rows = levelInfo.rows;
-		int rowCount = levelInfo.rowCount;
-		int columnCount = levelInfo.columnCount;
+		List<Row> rows = levelInfo.Rows;
+		int rowCount = levelInfo.RowCount;
+		int columnCount = levelInfo.ColumnCount;
 
 		// starting from bottom row (closest to player)
 		for (int rowIdx = 0; rowIdx < rowCount; ++rowIdx)
 		{
-			List<int> columns = rows[rowIdx].columns;
+			List<int> columns = rows[rowIdx].Columns;
 
 			float offsetX = bubbleSize.RuntimeValue.x * (-columnCount / 2);
 			float offsetY = bubbleSize.RuntimeValue.y * rowIdx;
@@ -162,10 +162,10 @@ public class LevelGenerator : MonoBehaviour
 				bubblePosition.x = offsetX + (columnIdx * bubbleSize.RuntimeValue.x);
 
 				bubble.Type = (BubbleType)bubbleTypeIntValue;
-				bubble.Type = (BubbleType)bubbleTypeIntValue;
 				bubble.Coordinates = new Vector2(columnIdx, rowIdx);
 
 				bubbleObject.transform.localPosition = bubblePosition;
+
 				bubbleObject.SetActive(bubbleTypeIntValue != 0);
 			}
 		}

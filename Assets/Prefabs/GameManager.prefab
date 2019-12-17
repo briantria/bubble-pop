@@ -65,18 +65,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubbleBulletType: {fileID: 11400000, guid: 014bbb10b7d38814b8dd7c76172413ff, type: 2}
   minimumMatchCount: {fileID: 11400000, guid: 6db52e1d26421794dbddb2774848d246, type: 2}
-  levelDataMap: {fileID: 11400000, guid: 4cae1e667150b2f4994617fc2ee8c7a0, type: 2}
   bubbleSize: {fileID: 11400000, guid: a225e545919403d40bd2f842a73583c1, type: 2}
   levelMapDimension: {fileID: 11400000, guid: 3c89ec5f0463fdf4091ca83f8072197e, type: 2}
   bulletHitPosition: {fileID: 11400000, guid: e9a5025926787434aa6039d8272002a7, type: 2}
   bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
     type: 2}
-  activeBubbleObjectList: {fileID: 11400000, guid: 56642203e99f2e143b5a300b5da4fee7,
-    type: 2}
-  inactiveBubbleObjectList: {fileID: 11400000, guid: 35de41b9ebea0b14b9fcccf77924b67b,
-    type: 2}
   bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
-  onBulletReload: {fileID: 11400000, guid: e5d4395b39fce884eb00e45ed66f71bd, type: 2}
+  bubblePrefab: {fileID: 4726725535379041231, guid: 1b80f120a839c7c49a89de8355e38c76,
+    type: 3}
+  onBulletReload: {fileID: 11400000, guid: 066f97c4e9df7be419c72e1582aad9ef, type: 2}
 --- !u!114 &114532757438464926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +86,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ff47802bfe97144842bb2c466bc407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: d1d00522648e14c4d98793e8debe2f03, type: 2}
+  gameEvent: {fileID: 11400000, guid: bad060f9678e3fa499e4f9c564da6640, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:

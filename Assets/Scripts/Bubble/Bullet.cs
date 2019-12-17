@@ -91,7 +91,7 @@ public class Bullet : MonoBehaviour
 
 		Vector3 deltaPosition = currDirection * shootingSpeed.InitValue * Time.deltaTime;
 		currPosition += deltaPosition;
-		bulletPosition.RuntimeValue = transform.localPosition;
+		bulletPosition.RuntimeValue = currPosition;
 		transform.position = currPosition;
 
 		if (onUpdateBulletPosition != null)
@@ -182,14 +182,24 @@ public class Bullet : MonoBehaviour
 			}
 
 			BubbleType bubbleType = bubble.Type;
+
+			if (bubbleType == BubbleType.None)
+			{
+				continue;
+			}
+
 			if (!activeBubbleTypes.Contains(bubbleType))
 			{
 				activeBubbleTypes.Add(bubbleType);
 			}
 		}
 
+		bubbleBulletType.RuntimeValue = 1;
 		int randomIdx = Random.Range(0, activeBubbleTypes.Count);
-		bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
+		if (randomIdx >= 0 && randomIdx < activeBubbleTypes.Count)
+		{
+			bubbleBulletType.RuntimeValue = (int)activeBubbleTypes[randomIdx];
+		}
 	}
 	#endregion
 
