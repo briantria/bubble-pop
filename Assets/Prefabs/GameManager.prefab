@@ -71,6 +71,8 @@ MonoBehaviour:
   bubbleHitCoordinates: {fileID: 11400000, guid: 8f0c28add3b48bc4c8381299e7e13dea,
     type: 2}
   bubbleTargetList: {fileID: 11400000, guid: c2715552b446bf64e8114017943f07d9, type: 2}
+  bubblePrefab: {fileID: 4726725535379041231, guid: 1b80f120a839c7c49a89de8355e38c76,
+    type: 3}
   onBulletReload: {fileID: 11400000, guid: 066f97c4e9df7be419c72e1582aad9ef, type: 2}
 --- !u!114 &114532757438464926
 MonoBehaviour:

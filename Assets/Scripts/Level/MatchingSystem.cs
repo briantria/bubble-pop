@@ -25,9 +25,14 @@ public class MatchingSystem : MonoBehaviour
 	[Space]
 	[SerializeField] private GameObjectList bubbleTargetList;
 
+	[Header("Prefabs")]
+	[SerializeField] private GameObject bubblePrefab;
+
 	[Header("Game Events")]
 	[SerializeField] private GameEvent onBulletReload;
 #pragma warning restore 0649
+
+	private List<GameObject> ragdollBubbleList = new List<GameObject>();
 
 	int[,,] neighborOffsetArray = new int[,,]
 	{
@@ -40,6 +45,42 @@ public class MatchingSystem : MonoBehaviour
 			{-1, 0}, {0, 1}, {1, 1}
 		}
 	};
+	#endregion
+
+	#region LifeCycle
+	void Start()
+	{
+		if (HasMissingReference())
+		{
+			return;
+		}
+
+		int ragdollCount = (int)(levelMapDimension.RuntimeValue.x * levelMapDimension.RuntimeValue.y);
+		for (int idx = 0; idx < ragdollCount; ++idx)
+		{
+			GameObject ragdollBubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity, transform);
+			ragdollBubble.name = "Ragdoll Bubble";
+			ragdollBubble.SetActive(false);
+			ragdollBubbleList.Add(ragdollBubble);
+		}
+	}
+
+	void Update()
+	{
+		if (HasMissingReference())
+		{
+			return;
+		}
+
+		foreach (GameObject ragdollBubble in ragdollBubbleList)
+		{
+			if (ragdollBubble.transform.position.y < -7)
+			{
+				ragdollBubble.transform.position = Vector3.zero;
+				ragdollBubble.SetActive(false);
+			}
+		}
+	}
 	#endregion
 
 	#region Private Methods
@@ -87,10 +128,16 @@ public class MatchingSystem : MonoBehaviour
 			return true;
 		}
 
+		if (bubblePrefab == null)
+		{
+			Debug.LogError("Missing bubble prefab.");
+			return true;
+		}
+
 		return false;
 	}
 
-	private List<GameObject> getNeighbors(Vector2 coordinates, NeighborType neighborType)
+	private List<GameObject> GetNeighbors(Vector2 coordinates, NeighborType neighborType)
 	{
 		List<GameObject> neighbors = new List<GameObject>();
 
@@ -148,9 +195,9 @@ public class MatchingSystem : MonoBehaviour
 		return neighbors;
 	}
 
-	private Bubble attachBubbleBullet()
+	private Bubble AttachBubbleBullet()
 	{
-		List<GameObject> inactiveNeighbors = getNeighbors(bubbleHitCoordinates.RuntimeValue, NeighborType.Inactive);
+		List<GameObject> inactiveNeighbors = GetNeighbors(bubbleHitCoordinates.RuntimeValue, NeighborType.Inactive);
 		GameObject bubbleObject = null;
 
 		foreach (GameObject neighbor in inactiveNeighbors)
@@ -183,7 +230,7 @@ public class MatchingSystem : MonoBehaviour
 	}
 
 	// reference: http://rembound.com/articles/bubble-shooter-game-tutorial-with-html5-and-javascript
-	private List<GameObject> getPopList(Bubble bubble, bool ignoreMatchType)
+	private List<GameObject> GetPopList(Bubble bubble, bool ignoreMatchType)
 	{
 		List<GameObject> popList = new List<GameObject>();
 		List<GameObject> pendingBubbleList = new List<GameObject>();
@@ -207,7 +254,7 @@ public class MatchingSystem : MonoBehaviour
 			if (ignoreMatchType || currentBubble.Type == bubble.Type)
 			{
 				popList.Add(currentBubbleObject);
-				List<GameObject> activeNeighbors = getNeighbors(currentBubble.Coordinates, NeighborType.Active);
+				List<GameObject> activeNeighbors = GetNeighbors(currentBubble.Coordinates, NeighborType.Active);
 
 				foreach (GameObject neighbor in activeNeighbors)
 				{
@@ -223,7 +270,7 @@ public class MatchingSystem : MonoBehaviour
 		return popList;
 	}
 
-	private List<GameObject> getFloatingPopList()
+	private List<GameObject> GetFloatingPopList()
 	{
 		List<GameObject> floatingPopList = new List<GameObject>();
 		List<GameObject> checkedList = new List<GameObject>();
@@ -243,7 +290,7 @@ public class MatchingSystem : MonoBehaviour
 				break;
 			}
 
-			List<GameObject> popList = getPopList(bubble, true);
+			List<GameObject> popList = GetPopList(bubble, true);
 			checkedList.AddRange(popList);
 
 			if (popList.Count <= 0)
@@ -271,6 +318,76 @@ public class MatchingSystem : MonoBehaviour
 
 		return floatingPopList;
 	}
+
+	private void PopBubbles(List<GameObject> popList)
+	{
+		if (popList.Count < minimumMatchCount.InitValue)
+		{
+			return;
+		}
+
+		foreach (GameObject matchedBubbleObject in popList)
+		{
+			Bubble matchedBubble = matchedBubbleObject.GetComponent<Bubble>();
+			if (matchedBubbleObject == null)
+			{
+				Debug.LogError("Missing bubble component.");
+				break;
+			}
+
+			ActivateRagdollBubble(matchedBubbleObject);
+
+			matchedBubble.Type = BubbleType.None;
+			matchedBubbleObject.SetActive(false);
+		}
+	}
+
+	private void ActivateRagdollBubble(GameObject bubbleObject)
+	{
+		if (ragdollBubbleList.Count == 0)
+		{
+			Debug.Log("rigid body list not set");
+			return;
+		}
+
+		Bubble bubble = bubbleObject.GetComponent<Bubble>();
+		if (bubble == null)
+		{
+			return;
+		}
+
+		Vector2 coordinates = bubble.Coordinates;
+		int ragdollIdx = (int)((coordinates.y * levelMapDimension.RuntimeValue.x) + coordinates.x);
+		if (ragdollIdx < 0 || ragdollIdx >= ragdollBubbleList.Count)
+		{
+			return;
+		}
+
+		Rigidbody2D bubbleRigidBody = ragdollBubbleList[ragdollIdx].GetComponent<Rigidbody2D>();
+		if (bubbleRigidBody == null)
+		{
+			return;
+		}
+
+		Bubble ragdollBubble = ragdollBubbleList[ragdollIdx].GetComponent<Bubble>();
+		if (ragdollBubble == null)
+		{
+			return;
+		}
+
+		ragdollBubble.Type = bubble.Type;
+
+		Vector3 ragdollPosition = bubbleObject.transform.position;
+		ragdollPosition.z -= 2;
+		ragdollBubbleList[ragdollIdx].transform.position = ragdollPosition;
+
+		ragdollBubbleList[ragdollIdx].SetActive(true);
+
+		Vector2 forceDirection = Vector2.zero;
+		forceDirection.x = Random.Range(-1.5f, 1.5f);
+		forceDirection.y = Random.Range(1.5f, 1.8f);
+		bubbleRigidBody.AddForce(forceDirection, ForceMode2D.Impulse);
+	}
 	#endregion
 
 	public void PopMatchedBubbles()
@@ -280,7 +397,7 @@ public class MatchingSystem : MonoBehaviour
 			return;
 		}
 
-		Bubble bubble = attachBubbleBullet();
+		Bubble bubble = AttachBubbleBullet();
 
 		if (bubble == null)
 		{
@@ -292,37 +409,8 @@ public class MatchingSystem : MonoBehaviour
 			return;
 		}
 
-		List<GameObject> popList = getPopList(bubble, false);
-		if (popList.Count >= minimumMatchCount.InitValue)
-		{
-			foreach (GameObject matchedBubbleObject in popList)
-			{
-				Bubble matchedBubble = matchedBubbleObject.GetComponent<Bubble>();
-				if (matchedBubbleObject == null)
-				{
-					Debug.LogError("Missing bubble component.");
-					break;
-				}
-
-				matchedBubble.Type = BubbleType.None;
-				matchedBubbleObject.SetActive(false);
-			}
-		}
-
-		popList = getFloatingPopList();
-		foreach (GameObject floatingBubbleObject in popList)
-		{
-			Bubble floatingBubble = floatingBubbleObject.GetComponent<Bubble>();
-			if (floatingBubbleObject == null)
-			{
-				Debug.LogError("Missing bubble component.");
-				break;
-			}
-
-			floatingBubble.Type = BubbleType.None;
-			floatingBubbleObject.SetActive(false);
-		}
-
+		PopBubbles(GetPopList(bubble, false));
+		PopBubbles(GetFloatingPopList());
 
 		// TODO: animations
 
