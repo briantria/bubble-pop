@@ -19,6 +19,7 @@ public class LevelGenerator : MonoBehaviour
 	[SerializeField] private GameObject bubblePrefab;
 	[Space]
 	[SerializeField] private IntVariable bubbleBulletType;
+	[SerializeField] private IntVariable currentLevel;
 	[Space]
 	[SerializeField] private VectorVariable bubbleSize;
 	[SerializeField] private VectorVariable levelMapDimension;
@@ -84,12 +85,18 @@ public class LevelGenerator : MonoBehaviour
 			return true;
 		}
 
+		if (currentLevel == null)
+		{
+			Debug.LogError("Missing reference to current level.");
+			return true;
+		}
+
 		return false;
 	}
 
 	void LoadLevel()
 	{
-		levelInfo = LevelInfo.CreateFromJsonFileForLevel(1);
+		levelInfo = LevelInfo.CreateFromJsonFileForLevel(currentLevel.InitValue);
 		levelMapDimension.RuntimeValue = new Vector3(levelInfo.ColumnCount, levelInfo.RowCount, 0);
 		bubbleTargetList.Contents = new List<GameObject>();
 	}
