@@ -10,9 +10,9 @@ using UnityEngine;
 [System.Serializable]
 public class LevelInfo
 {
-	public int rowCount;
-	public int columnCount;
-	public List<Row> rows;
+	public int RowCount;
+	public int ColumnCount;
+	public List<Row> Rows;
 
 	public static LevelInfo CreateFromJsonFileForLevel(int level)
 	{
@@ -30,5 +30,5 @@ public class LevelInfo
 [System.Serializable]
 public class Row
 {
-	public List<int> columns;
+	public List<int> Columns;
 }
